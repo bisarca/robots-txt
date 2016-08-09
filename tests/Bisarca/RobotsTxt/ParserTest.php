@@ -24,6 +24,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
      */
     protected $object;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp()
     {
         $this->object = new Parser();
@@ -38,10 +41,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
     {
         $parsed = $this->object->parse($content);
 
-        var_dump($parsed);
-
         $this->assertTrue(true);
-        // $this->assertInternalType('array', $parsed);
     }
 
     /**

@@ -11,25 +11,45 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+/**
+ * "User-agent" directive element.
+ */
 class UserAgent implements StartOfGroupInterface
 {
+    /**
+     * Directive value.
+     *
+     * @var string
+     */
     private $value = '';
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(string $raw)
     {
         $this->value = preg_replace('/^user-agent:\s+(.+)/i', '$1', $raw);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getField(): string
     {
         return 'user-agent';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getValue(): string
     {
         return $this->value;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString(): string
     {
         return sprintf('User-agent: %s', $this->value);

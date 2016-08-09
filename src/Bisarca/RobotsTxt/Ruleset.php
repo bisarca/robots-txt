@@ -11,60 +11,74 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\DirectiveInterface;
 use Countable;
 use Iterator;
 
-class Rulesets implements Iterator, Countable
+class Ruleset implements Iterator, Countable
 {
     private $data = [];
+
     private $index = 0;
 
-    public function current(): Ruleset
+    /**
+     * {@inheritdoc}
+     */
+    public function current(): DirectiveInterface
     {
         return $this->data[$this->index];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function key()
     {
         return $this->index;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function next()
     {
         ++$this->index;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rewind()
     {
         $this->index = 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function valid(): bool
     {
         return $this->index >= 0 && $this->index < count($this->data);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function count(): int
     {
         return count($this->data);
     }
 
-    public function add(Ruleset ...$rulesets)
+    public function add(DirectiveInterface ...$directives)
     {
-        foreach ($rulesets as $ruleset) {
-            $this->data[] = $ruleset;
+        foreach ($directives as $directive) {
+            $this->data[] = $directive;
         }
     }
 
     public function isAllowed(string $userAgent, string $path): bool
     {
-        $allowed = false;
-
-        foreach ($this as $ruleset) {
-            $allowed = $allowed || $ruleset->isAllowed($userAgent, $path);
-        }
-
-        return $allowed;
+        return false;
     }
 
     public function isDisallowed(string $userAgent, string $path): bool

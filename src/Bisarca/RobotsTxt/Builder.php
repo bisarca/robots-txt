@@ -14,7 +14,7 @@ namespace Bisarca\RobotsTxt;
 use Bisarca\RobotsTxt\Directive\DirectivesFactory;
 use Bisarca\RobotsTxt\Directive\DirectivesFactoryInterface;
 
-class Parser
+class Builder
 {
     /**
      * Directives Factory.
@@ -23,6 +23,11 @@ class Parser
      */
     private $directivesFactory;
 
+    /**
+     * Constructor for required dependencies.
+     *
+     * @param DirectivesFactoryInterface|null $directivesFactory
+     */
     public function __construct(DirectivesFactoryInterface $directivesFactory = null)
     {
         $this->setDirectivesFactory($directivesFactory ?: new DirectivesFactory());
@@ -48,49 +53,39 @@ class Parser
         $this->directivesFactory = $directivesFactory;
     }
 
-    public function parse(string $content)
+    /**
+     * Builds the robots.txt file content.
+     *
+     * @param Rulesets $rulesets Required rulesets.
+     *
+     * @return string
+     */
+    public function build(Rulesets $rulesets): string
     {
-        $rows = $this->extractRows($content);
-        $groups = [];
+        $output = '';
 
-        $counter = 0;
-        $type = null;
-
-        foreach ($rows as $row) {
-            try {
-                $directive = $this->directivesFactory->create($row);
-            } catch (\Exception $exception) {
-                continue;
-            }
-
-            $previous = $type;
-            $type = $directive instanceof Directive\StartOfGroupInterface;
-
-            if ($type && !($type && $previous)) {
-                ++$counter;
-            }
-
-            if (!isset($groups[$counter])) {
-                $groups[$counter] = [];
-            }
-
-            $groups[$counter][] = $directive;
+        foreach ($rulesets as $ruleset) {
+            $output .= $this->buildRuleset($ruleset).PHP_EOL;
         }
 
-        return $groups;
+        return $output;
     }
 
-    private function extractRows(string $content): array
+    /**
+     * Builds a single robots.txt' set of directives (ruleset).
+     *
+     * @param Ruleset $ruleset Required ruleset.
+     *
+     * @return string
+     */
+    private function buildRuleset(Ruleset $ruleset): string
     {
-        // split by EOL
-        $rows = explode(PHP_EOL, $content);
+        $output = '';
 
-        // remove comments and wrapper spaces
-        $rows = array_map(function ($row) {
-            return trim(preg_replace('/^(.*)#.*/', '$1', $row));
-        }, $rows);
+        foreach ($ruleset as $directive) {
+            $output .= $directive.PHP_EOL;
+        }
 
-        // empty lines aren't useful
-        return array_filter($rows);
+        return $output;
     }
 }

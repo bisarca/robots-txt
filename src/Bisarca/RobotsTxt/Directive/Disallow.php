@@ -11,30 +11,55 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
-class Allow implements GroupMemberInterface
+/**
+ * "Disallow" directive element.
+ */
+class Disallow implements GroupMemberInterface
 {
+    /**
+     * Directive value.
+     *
+     * @var string
+     */
     private $value = '';
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(string $raw)
     {
-        $this->value = preg_replace('/^allow:\s+(.+)/i', '$1', $raw);
+        $this->value = preg_replace('/^disallow:\s+(.+)/i', '$1', $raw);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getField(): string
     {
-        return 'allow';
+        return 'disallow';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getValue(): string
     {
         return $this->value;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString(): string
     {
-        return sprintf('Allow: %s', $this->value);
+        return sprintf('Disallow: %s', $this->value);
     }
 
+    /**
+     * Gets regular expression associated.
+     *
+     * @return string
+     */
     public function getRegex(): string
     {
         // "*" matches any sequence of characters (zero or more)

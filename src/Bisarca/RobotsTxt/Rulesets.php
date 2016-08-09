@@ -11,55 +11,89 @@
 
 namespace Bisarca\RobotsTxt;
 
-use Bisarca\RobotsTxt\Directive\DirectiveInterface;
 use Countable;
 use Iterator;
 
-class Ruleset implements Iterator, Countable
+class Rulesets implements Iterator, Countable
 {
+    /**
+     * Contained rulesets.
+     *
+     * @var array
+     */
     private $data = [];
+
+    /**
+     * Internal index.
+     *
+     * @var int
+     */
     private $index = 0;
 
-    public function current(): DirectiveInterface
+    /**
+     * {@inheritdoc}
+     */
+    public function current(): Ruleset
     {
         return $this->data[$this->index];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function key()
     {
         return $this->index;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function next()
     {
         ++$this->index;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rewind()
     {
         $this->index = 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function valid(): bool
     {
         return $this->index >= 0 && $this->index < count($this->data);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function count(): int
     {
         return count($this->data);
     }
 
-    public function add(DirectiveInterface ...$directives)
+    public function add(Ruleset ...$rulesets)
     {
-        foreach ($directives as $directive) {
-            $this->data[] = $directive;
+        foreach ($rulesets as $ruleset) {
+            $this->data[] = $ruleset;
         }
     }
 
     public function isAllowed(string $userAgent, string $path): bool
     {
-        return false;
+        $allowed = false;
+
+        foreach ($this as $ruleset) {
+            $allowed = $allowed || $ruleset->isAllowed($userAgent, $path);
+        }
+
+        return $allowed;
     }
 
     public function isDisallowed(string $userAgent, string $path): bool

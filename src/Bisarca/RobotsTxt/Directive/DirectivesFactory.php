@@ -72,6 +72,9 @@ class DirectivesFactory implements DirectivesFactoryInterface
         $this->directives[$class::getField()] = $class;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create(string $row): DirectiveInterface
     {
         $directives = array_filter(

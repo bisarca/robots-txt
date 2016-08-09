@@ -13,5 +13,12 @@ namespace Bisarca\RobotsTxt\Directive;
 
 interface DirectivesFactoryInterface
 {
+    /**
+     * Creates a directive from the raw line contained in the robots.txt file.
+     *
+     * @param string $raw Raw line.
+     *
+     * @return DirectiveInterface
+     */
     public function create(string $row): DirectiveInterface;
 }
