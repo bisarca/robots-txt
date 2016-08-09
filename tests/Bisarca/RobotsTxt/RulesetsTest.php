@@ -12,6 +12,7 @@
 namespace Bisarca\RobotsTxt;
 
 use PHPUnit_Framework_TestCase;
+use Traversable;
 
 /**
  * @covers Bisarca\RobotsTxt\Rulesets
@@ -31,64 +32,44 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
         $this->object = new Rulesets();
     }
 
-    /**
-     * @todo   Implement testCurrent().
-     */
-    public function testCurrent()
+    public function testGetIterator()
     {
-        $this->markTestIncomplete();
+        $this->assertInstanceOf(
+            Traversable::class,
+            $this->object->getIterator()
+        );
     }
 
     /**
-     * @todo   Implement testKey().
-     */
-    public function testKey()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @todo   Implement testNext().
-     */
-    public function testNext()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @todo   Implement testRewind().
-     */
-    public function testRewind()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @todo   Implement testValid().
-     */
-    public function testValid()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @todo   Implement testCount().
-     */
-    public function testCount()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @todo   Implement testAdd().
+     * @todo Implement testAdd().
      */
     public function testAdd()
     {
-        $this->markTestIncomplete();
+        $ruleset = $this->createMock(Ruleset::class);
+
+        $this->object->add($ruleset);
+
+        $rulesets = iterator_to_array($this->object);
+
+        $this->assertSame($rulesets[0], $ruleset);
     }
 
     /**
-     * @todo   Implement testIsAllowed().
+     * @depends testAdd
+     */
+    public function testCount()
+    {
+        $this->assertCount(0, $this->object);
+
+        $ruleset = $this->createMock(Ruleset::class);
+
+        $this->object->add($ruleset, $ruleset);
+
+        $this->assertCount(2, $this->object);
+    }
+
+    /**
+     * @todo Implement testIsAllowed().
      */
     public function testIsAllowed()
     {
@@ -96,7 +77,7 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo   Implement testIsDisallowed().
+     * @todo Implement testIsDisallowed().
      */
     public function testIsDisallowed()
     {

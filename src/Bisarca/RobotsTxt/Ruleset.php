@@ -11,11 +11,13 @@
 
 namespace Bisarca\RobotsTxt;
 
+use ArrayIterator;
 use Bisarca\RobotsTxt\Directive\DirectiveInterface;
 use Countable;
-use Iterator;
+use IteratorAggregate;
+use Traversable;
 
-class Ruleset implements Iterator, Countable
+class Ruleset implements Countable, IteratorAggregate
 {
     /**
      * Contained directives.
@@ -25,50 +27,11 @@ class Ruleset implements Iterator, Countable
     private $data = [];
 
     /**
-     * Internal index.
-     *
-     * @var int
-     */
-    private $index = 0;
-
-    /**
      * {@inheritdoc}
      */
-    public function current(): DirectiveInterface
+    public function getIterator(): Traversable
     {
-        return $this->data[$this->index];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return $this->index;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        ++$this->index;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        $this->index = 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return $this->index >= 0 && $this->index < count($this->data);
+        return new ArrayIterator($this->data);
     }
 
     /**

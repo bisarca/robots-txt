@@ -32,7 +32,7 @@ class DirectivesFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo   Implement testGetDirectives().
+     * @todo Implement testGetDirectives().
      */
     public function testGetDirectives()
     {
@@ -40,7 +40,7 @@ class DirectivesFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo   Implement testSetDirectives().
+     * @todo Implement testSetDirectives().
      */
     public function testSetDirectives()
     {
@@ -48,7 +48,7 @@ class DirectivesFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo   Implement testAddDirective().
+     * @todo Implement testAddDirective().
      */
     public function testAddDirective()
     {
@@ -56,7 +56,7 @@ class DirectivesFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo   Implement testCreate().
+     * @todo Implement testCreate().
      */
     public function testCreate()
     {

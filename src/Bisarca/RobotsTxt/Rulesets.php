@@ -11,10 +11,12 @@
 
 namespace Bisarca\RobotsTxt;
 
+use ArrayIterator;
 use Countable;
-use Iterator;
+use IteratorAggregate;
+use Traversable;
 
-class Rulesets implements Iterator, Countable
+class Rulesets implements Countable, IteratorAggregate
 {
     /**
      * Contained rulesets.
@@ -24,50 +26,11 @@ class Rulesets implements Iterator, Countable
     private $data = [];
 
     /**
-     * Internal index.
-     *
-     * @var int
-     */
-    private $index = 0;
-
-    /**
      * {@inheritdoc}
      */
-    public function current(): Ruleset
+    public function getIterator(): Traversable
     {
-        return $this->data[$this->index];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return $this->index;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        ++$this->index;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        $this->index = 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return $this->index >= 0 && $this->index < count($this->data);
+        return new ArrayIterator($this->data);
     }
 
     /**
