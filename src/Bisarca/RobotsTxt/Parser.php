@@ -53,12 +53,19 @@ class Parser
         $this->directivesFactory = $directivesFactory;
     }
 
-    public function parse(string $content)
+    /**
+     * Parse robots.txt content.
+     *
+     * @param string $content
+     *
+     * @return Rulesets
+     */
+    public function parse(string $content): Rulesets
     {
         $rows = $this->extractRows($content);
         $groups = [];
 
-        $counter = 0;
+        $counter = -1;
         $type = null;
 
         foreach ($rows as $row) {
@@ -82,9 +89,24 @@ class Parser
             $groups[$counter][] = $directive;
         }
 
-        return $groups;
+        foreach ($groups as $index => $group) {
+            $groups[$index] = new Ruleset();
+            $groups[$index]->add(...$group);
+        }
+
+        $rulesets = new Rulesets();
+        $rulesets->add(...$groups);
+
+        return $rulesets;
     }
 
+    /**
+     * Extract single rows from main content.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
     private function extractRows(string $content): array
     {
         // split by EOL

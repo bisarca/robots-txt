@@ -17,8 +17,18 @@ use Iterator;
 
 class Ruleset implements Iterator, Countable
 {
+    /**
+     * Contained directives.
+     *
+     * @var array
+     */
     private $data = [];
 
+    /**
+     * Internal index.
+     *
+     * @var int
+     */
     private $index = 0;
 
     /**
@@ -69,6 +79,11 @@ class Ruleset implements Iterator, Countable
         return count($this->data);
     }
 
+    /**
+     * Adds directives.
+     *
+     * @param DirectiveInterface $directives
+     */
     public function add(DirectiveInterface ...$directives)
     {
         foreach ($directives as $directive) {
@@ -76,11 +91,49 @@ class Ruleset implements Iterator, Countable
         }
     }
 
+    /**
+     * Checks if an user agent is allowed.
+     *
+     * @param string $userAgent
+     * @param string $path
+     *
+     * @return bool
+     */
     public function isAllowed(string $userAgent, string $path): bool
     {
-        return false;
+        $matchesAgent = false;
+
+        foreach ($this->data as $directive) {
+            if ($directive instanceof Directive\UserAgent) {
+                if (in_array($directive->getValue(), ['*', $userAgent])) {
+                    $matchesAgent = true;
+                }
+            }
+
+            if ($directive instanceof Directive\Allow) {
+                if (preg_match('#'.$directive->getRegex().'#', $path)) {
+                    return true;
+                }
+            }
+
+            if ($directive instanceof Directive\Disallow) {
+                if (preg_match('#'.$directive->getRegex().'#', $path)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
+    /**
+     * Checks if an user agent is not allowed.
+     *
+     * @param string $userAgent
+     * @param string $path
+     *
+     * @return bool
+     */
     public function isDisallowed(string $userAgent, string $path): bool
     {
         return !$this->isAllowed($userAgent, $path);

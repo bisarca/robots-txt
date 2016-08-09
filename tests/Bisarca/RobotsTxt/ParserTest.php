@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\DirectivesFactory;
+use Bisarca\RobotsTxt\Directive\DirectivesFactoryInterface;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -32,51 +34,50 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $this->object = new Parser();
     }
 
+    public function testGetDirectivesFactory()
+    {
+        $this->assertInstanceOf(
+            DirectivesFactory::class,
+            $this->object->getDirectivesFactory()
+        );
+    }
+
+    /**
+     * @depends testGetDirectivesFactory
+     */
+    public function testSetDirectivesFactory()
+    {
+        $factory = $this->createMock(DirectivesFactoryInterface::class);
+
+        $this->object->setDirectivesFactory($factory);
+        $this->assertSame($factory, $this->object->getDirectivesFactory());
+    }
+
     /**
      * @param string $content
+     * @param array  $totals
      *
      * @dataProvider parseDataProvider
      */
-    public function testParse(string $content)
+    public function testParse(string $content, array $totals)
     {
-        $parsed = $this->object->parse($content);
+        $rulesets = $this->object->parse($content);
 
-        $this->assertTrue(true);
+        $this->assertCount(count($totals), $rulesets);
+
+        foreach ($rulesets as $index => $ruleset) {
+            $this->assertCount($totals[$index], $ruleset);
+        }
     }
 
     /**
      * @return array
      */
-    public function parseDataProvider()
+    public function parseDataProvider(): array
     {
         return [
-            ["#-------------------------------------------------------------
-# The following robots understand the 2.0 spec, so we
-# can allow them a bit more freedom about what to do
-#--------------------------------------------------------------
-
-User-agent: alfred
-User-agent: newchives
-User-agent: oscarbot
-Robot-version: 2.0    # uses 2.0 spec
-Allow: *index.html      # allow any index pages
-Allow: /images/index.html   # make sure we index this
-Allow: /blackhole/index.html    # and we allow this page to be indexed
-Allow: /blackhole/info*     # as well as these
-Disallow: *         # nothing else will be allowed
-Disallow: *.shtml       # don't index server include files
-Disallow: *.cgi         # don't attempt to access cgi scripts
-Disallow: *.gif         # no images
-Disallow: *.jpg
-Disallow: /images*      # don't index here generally
-Disallow: /blackhole/info99*    # these we don't want indexed
-Disallow: /blackhole/info8.html # nor this one"],
-            ["
-User-agent: alfred
-Allow: *index.html
-
-User-agent: newchives
-Allow: /images/index.html"],
+            [file_get_contents(__DIR__.'/fixtures/1'), [15]],
+            [file_get_contents(__DIR__.'/fixtures/2'), [2, 2]],
         ];
     }
 }

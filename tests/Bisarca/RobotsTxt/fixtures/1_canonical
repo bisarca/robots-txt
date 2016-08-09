@@ -1,0 +1,15 @@
+User-agent: alfred
+User-agent: newchives
+User-agent: oscarbot
+Allow: *index.html
+Allow: /images/index.html
+Allow: /blackhole/index.html
+Allow: /blackhole/info*
+Disallow: *
+Disallow: *.shtml
+Disallow: *.cgi
+Disallow: *.gif
+Disallow: *.jpg
+Disallow: /images*
+Disallow: /blackhole/info99*
+Disallow: /blackhole/info8.html

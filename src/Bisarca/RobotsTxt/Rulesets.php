@@ -78,6 +78,11 @@ class Rulesets implements Iterator, Countable
         return count($this->data);
     }
 
+    /**
+     * Adds rulesets.
+     *
+     * @param Ruleset $rulesets
+     */
     public function add(Ruleset ...$rulesets)
     {
         foreach ($rulesets as $ruleset) {
@@ -85,6 +90,14 @@ class Rulesets implements Iterator, Countable
         }
     }
 
+    /**
+     * Checks if an user agent is allowed.
+     *
+     * @param string $userAgent
+     * @param string $path
+     *
+     * @return bool
+     */
     public function isAllowed(string $userAgent, string $path): bool
     {
         $allowed = false;
@@ -96,6 +109,14 @@ class Rulesets implements Iterator, Countable
         return $allowed;
     }
 
+    /**
+     * Checks if an user agent is not allowed.
+     *
+     * @param string $userAgent
+     * @param string $path
+     *
+     * @return bool
+     */
     public function isDisallowed(string $userAgent, string $path): bool
     {
         return !$this->isAllowed($userAgent, $path);

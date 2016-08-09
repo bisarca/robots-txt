@@ -1,0 +1,5 @@
+User-agent: alfred
+Allow: *index.html
+
+User-agent: newchives
+Allow: /images/index.html
