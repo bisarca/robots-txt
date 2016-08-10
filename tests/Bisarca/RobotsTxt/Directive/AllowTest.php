@@ -60,7 +60,10 @@ class AllowTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $object->getRegex());
     }
 
-    public function getRegexDataProvider()
+    /**
+     * @return array
+     */
+    public function getRegexDataProvider(): array
     {
         return [
             // "*" matches any sequence of characters (zero or more)

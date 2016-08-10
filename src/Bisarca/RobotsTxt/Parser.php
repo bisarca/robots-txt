@@ -11,47 +11,20 @@
 
 namespace Bisarca\RobotsTxt;
 
-use Bisarca\RobotsTxt\Directive\DirectivesFactory;
-use Bisarca\RobotsTxt\Directive\DirectivesFactoryInterface;
+use Exception;
 
 class Parser
 {
     /**
-     * Directives Factory.
+     * Registered directives.
      *
-     * @var FactoryInterface
+     * @var string[]
      */
-    private $directivesFactory;
-
-    /**
-     * Constructor for required dependencies.
-     *
-     * @param DirectivesFactoryInterface|null $directivesFactory
-     */
-    public function __construct(DirectivesFactoryInterface $directivesFactory = null)
-    {
-        $this->setDirectivesFactory($directivesFactory ?: new DirectivesFactory());
-    }
-
-    /**
-     * Gets the Directives Factory.
-     *
-     * @return DirectivesFactoryInterface
-     */
-    public function getDirectivesFactory(): DirectivesFactoryInterface
-    {
-        return $this->directivesFactory;
-    }
-
-    /**
-     * Sets the Directives Factory.
-     *
-     * @param DirectivesFactoryInterface $directivesFactory
-     */
-    public function setDirectivesFactory(DirectivesFactoryInterface $directivesFactory)
-    {
-        $this->directivesFactory = $directivesFactory;
-    }
+    private $directives = [
+        'allow' => Directive\Allow::class,
+        'disallow' => Directive\Disallow::class,
+        'user-agent' => Directive\UserAgent::class,
+    ];
 
     /**
      * Parse robots.txt content.
@@ -70,7 +43,7 @@ class Parser
 
         foreach ($rows as $row) {
             try {
-                $directive = $this->directivesFactory->create($row);
+                $directive = $this->getDirective($row);
             } catch (\Exception $exception) {
                 continue;
             }
@@ -90,14 +63,10 @@ class Parser
         }
 
         foreach ($groups as $index => $group) {
-            $groups[$index] = new Ruleset();
-            $groups[$index]->add(...$group);
+            $groups[$index] = new Ruleset(...$group);
         }
 
-        $rulesets = new Rulesets();
-        $rulesets->add(...$groups);
-
-        return $rulesets;
+        return new Rulesets(...$groups);
     }
 
     /**
@@ -120,5 +89,33 @@ class Parser
 
         // empty lines aren't useful
         return array_filter($rows);
+    }
+
+    /**
+     * Creates a directive from the raw line contained in the robots.txt file.
+     *
+     * @param string $raw Raw line.
+     *
+     * @return DirectiveInterface
+     */
+    private function getDirective(string $row): Directive\DirectiveInterface
+    {
+        $directives = array_filter(
+            $this->directives,
+            function ($field) use ($row) {
+                return preg_match(sprintf('/^%s:\s+.+/i', $field), $row);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+        $directives = array_values($directives);
+
+        // no directives found for this row
+        // no action required
+        if (empty($directives)) {
+            throw new Exception();
+        }
+
+        // directives should be sorted by priority
+        return new $directives[0]($row);
     }
 }

@@ -20,12 +20,12 @@ class Builder
      *
      * @return string
      */
-    public function build(Rulesets $rulesets): string
+    public static function build(Rulesets $rulesets): string
     {
         $output = '';
 
         foreach ($rulesets as $ruleset) {
-            $output .= $this->buildRuleset($ruleset).PHP_EOL;
+            $output .= self::buildRuleset($ruleset).PHP_EOL;
         }
 
         return rtrim($output, PHP_EOL).PHP_EOL;
@@ -38,7 +38,7 @@ class Builder
      *
      * @return string
      */
-    private function buildRuleset(Ruleset $ruleset): string
+    private static function buildRuleset(Ruleset $ruleset): string
     {
         $output = '';
 

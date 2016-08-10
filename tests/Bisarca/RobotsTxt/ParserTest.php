@@ -11,8 +11,6 @@
 
 namespace Bisarca\RobotsTxt;
 
-use Bisarca\RobotsTxt\Directive\DirectivesFactory;
-use Bisarca\RobotsTxt\Directive\DirectivesFactoryInterface;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -32,25 +30,6 @@ class ParserTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->object = new Parser();
-    }
-
-    public function testGetDirectivesFactory()
-    {
-        $this->assertInstanceOf(
-            DirectivesFactory::class,
-            $this->object->getDirectivesFactory()
-        );
-    }
-
-    /**
-     * @depends testGetDirectivesFactory
-     */
-    public function testSetDirectivesFactory()
-    {
-        $factory = $this->createMock(DirectivesFactoryInterface::class);
-
-        $this->object->setDirectivesFactory($factory);
-        $this->assertSame($factory, $this->object->getDirectivesFactory());
     }
 
     /**

@@ -26,6 +26,16 @@ class Rulesets implements Countable, IteratorAggregate
     private $data = [];
 
     /**
+     * Class constructor with optional initialization data.
+     *
+     * @param Ruleset[] $rulesets
+     */
+    public function __construct(Ruleset ...$rulesets)
+    {
+        $this->data = $rulesets;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getIterator(): Traversable
@@ -34,54 +44,71 @@ class Rulesets implements Countable, IteratorAggregate
     }
 
     /**
+     * Adds a ruleset.
+     *
+     * @param Ruleset $ruleset
+     */
+    public function add(Ruleset $ruleset)
+    {
+        $this->data[] = $ruleset;
+    }
+
+    /**
+     * Checks if a ruleset is contained.
+     *
+     * @param Ruleset $ruleset
+     *
+     * @return bool
+     */
+    public function has(Ruleset $ruleset): bool
+    {
+        return false !== array_search($ruleset, $this->data, true);
+    }
+
+    /**
+     * Remove all contained elements.
+     */
+    public function clear()
+    {
+        $this->data = [];
+    }
+
+    /**
+     * Checks if no elements are contained.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->data);
+    }
+
+    /**
+     * Remove an element.
+     *
+     * @param Ruleset $ruleset
+     *
+     * @return bool
+     */
+    public function remove(Ruleset $ruleset): bool
+    {
+        $key = array_search($ruleset, $this->data, true);
+
+        if (false !== $key) {
+            unset($this->data[$key]);
+            $this->data = array_values($this->data);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function count(): int
     {
         return count($this->data);
-    }
-
-    /**
-     * Adds rulesets.
-     *
-     * @param Ruleset $rulesets
-     */
-    public function add(Ruleset ...$rulesets)
-    {
-        foreach ($rulesets as $ruleset) {
-            $this->data[] = $ruleset;
-        }
-    }
-
-    /**
-     * Checks if an user agent is allowed.
-     *
-     * @param string $userAgent
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function isAllowed(string $userAgent, string $path): bool
-    {
-        $allowed = false;
-
-        foreach ($this as $ruleset) {
-            $allowed = $allowed || $ruleset->isAllowed($userAgent, $path);
-        }
-
-        return $allowed;
-    }
-
-    /**
-     * Checks if an user agent is not allowed.
-     *
-     * @param string $userAgent
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function isDisallowed(string $userAgent, string $path): bool
-    {
-        return !$this->isAllowed($userAgent, $path);
     }
 }

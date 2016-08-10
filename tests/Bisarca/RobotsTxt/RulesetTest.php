@@ -16,6 +16,7 @@ use Traversable;
 
 /**
  * @covers Bisarca\RobotsTxt\Ruleset
+ * @group unit
  */
 class RulesetTest extends PHPUnit_Framework_TestCase
 {
@@ -40,9 +41,6 @@ class RulesetTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @todo Implement testAdd().
-     */
     public function testAdd()
     {
         $directive = $this->createMock(Directive\DirectiveInterface::class);
@@ -63,65 +61,36 @@ class RulesetTest extends PHPUnit_Framework_TestCase
 
         $directive = $this->createMock(Directive\DirectiveInterface::class);
 
-        $this->object->add($directive, $directive);
+        $this->object->add($directive);
+        $this->object->add($directive);
 
         $this->assertCount(2, $this->object);
     }
 
     /**
-     * @param array  $rulesets
-     * @param string $userAgent
-     * @param string $path
-     * @param bool   $expected
-     *
-     * @dataProvider isAllowedDataProvider
+     * @depends testAdd
      */
-    public function testIsAllowed(
-        array $rulesets,
-        string $userAgent,
-        string $path,
-        bool $expected
-    ) {
-        $this->object->add(...$rulesets);
+    public function testClear()
+    {
+        $directive = $this->createMock(Directive\DirectiveInterface::class);
 
-        $this->assertSame(
-            $expected,
-            $this->object->isAllowed($userAgent, $path)
-        );
+        $this->object->add($directive);
+        $this->assertCount(1, $this->object);
+
+        $this->object->clear();
+        $this->assertCount(0, $this->object);
     }
 
     /**
-     * @return array
+     * @depends testAdd
      */
-    public function isAllowedDataProvider(): array
+    public function testIsEmpty()
     {
-        return [
-            [
-                [
-                    new Directive\UserAgent('foo'),
-                    new Directive\Disallow('/'),
-                ],
-                'foo',
-                '/',
-                false,
-            ],
-            [
-                [
-                    new Directive\UserAgent('foo'),
-                    new Directive\Disallow('/'),
-                ],
-                'foo',
-                '/t',
-                false,
-            ],
-        ];
-    }
+        $this->assertTrue($this->object->isEmpty());
 
-    /**
-     * @todo Implement testIsDisallowed().
-     */
-    public function testIsDisallowed()
-    {
-        $this->markTestIncomplete();
+        $directive = $this->createMock(Directive\DirectiveInterface::class);
+
+        $this->object->add($directive);
+        $this->assertFalse($this->object->isEmpty());
     }
 }

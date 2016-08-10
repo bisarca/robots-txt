@@ -13,18 +13,27 @@ namespace Bisarca\RobotsTxt;
 
 use ArrayIterator;
 use Bisarca\RobotsTxt\Directive\DirectiveInterface;
-use Countable;
 use IteratorAggregate;
 use Traversable;
 
-class Ruleset implements Countable, IteratorAggregate
+class Ruleset implements IteratorAggregate
 {
     /**
      * Contained directives.
      *
-     * @var array
+     * @var DirectiveInterface[]
      */
     private $data = [];
+
+    /**
+     * Class constructor with optional initialization data.
+     *
+     * @param DirectiveInterface[] $directives
+     */
+    public function __construct(DirectiveInterface ...$directives)
+    {
+        $this->data = $directives;
+    }
 
     /**
      * {@inheritdoc}
@@ -35,70 +44,71 @@ class Ruleset implements Countable, IteratorAggregate
     }
 
     /**
+     * Adds a directive.
+     *
+     * @param DirectiveInterface $directive
+     */
+    public function add(DirectiveInterface $directive)
+    {
+        $this->data[] = $directive;
+    }
+
+    /**
+     * Checks if a directive is contained.
+     *
+     * @param DirectiveInterface $directive
+     *
+     * @return bool
+     */
+    public function has(DirectiveInterface $directive): bool
+    {
+        return false !== array_search($directive, $this->data, true);
+    }
+
+    /**
+     * Remove all contained elements.
+     */
+    public function clear()
+    {
+        $this->data = [];
+    }
+
+    /**
+     * Checks if no elements are contained.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->data);
+    }
+
+    /**
+     * Remove an element.
+     *
+     * @param DirectiveInterface $directive
+     *
+     * @return bool
+     */
+    public function remove(DirectiveInterface $directive): bool
+    {
+        $key = array_search($directive, $this->data, true);
+
+        if (false !== $key) {
+            unset($this->data[$key]);
+            $this->data = array_values($this->data);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function count(): int
     {
         return count($this->data);
-    }
-
-    /**
-     * Adds directives.
-     *
-     * @param DirectiveInterface $directives
-     */
-    public function add(DirectiveInterface ...$directives)
-    {
-        foreach ($directives as $directive) {
-            $this->data[] = $directive;
-        }
-    }
-
-    /**
-     * Checks if an user agent is allowed.
-     *
-     * @param string $userAgent
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function isAllowed(string $userAgent, string $path): bool
-    {
-        $matchesAgent = false;
-
-        foreach ($this->data as $directive) {
-            if ($directive instanceof Directive\UserAgent) {
-                if (in_array($directive->getValue(), ['*', $userAgent])) {
-                    $matchesAgent = true;
-                }
-            }
-
-            if ($directive instanceof Directive\Allow) {
-                if (preg_match('#'.$directive->getRegex().'#', $path)) {
-                    return true;
-                }
-            }
-
-            if ($directive instanceof Directive\Disallow) {
-                if (preg_match('#'.$directive->getRegex().'#', $path)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if an user agent is not allowed.
-     *
-     * @param string $userAgent
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function isDisallowed(string $userAgent, string $path): bool
-    {
-        return !$this->isAllowed($userAgent, $path);
     }
 }

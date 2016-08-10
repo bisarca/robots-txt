@@ -16,6 +16,7 @@ use Traversable;
 
 /**
  * @covers Bisarca\RobotsTxt\Rulesets
+ * @group unit
  */
 class RulesetsTest extends PHPUnit_Framework_TestCase
 {
@@ -40,9 +41,6 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @todo Implement testAdd().
-     */
     public function testAdd()
     {
         $ruleset = $this->createMock(Ruleset::class);
@@ -63,24 +61,36 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
 
         $ruleset = $this->createMock(Ruleset::class);
 
-        $this->object->add($ruleset, $ruleset);
+        $this->object->add($ruleset);
+        $this->object->add($ruleset);
 
         $this->assertCount(2, $this->object);
     }
 
     /**
-     * @todo Implement testIsAllowed().
+     * @depends testAdd
      */
-    public function testIsAllowed()
+    public function testClear()
     {
-        $this->markTestIncomplete();
+        $ruleset = $this->createMock(Ruleset::class);
+
+        $this->object->add($ruleset);
+        $this->assertCount(1, $this->object);
+
+        $this->object->clear();
+        $this->assertCount(0, $this->object);
     }
 
     /**
-     * @todo Implement testIsDisallowed().
+     * @depends testAdd
      */
-    public function testIsDisallowed()
+    public function testIsEmpty()
     {
-        $this->markTestIncomplete();
+        $this->assertTrue($this->object->isEmpty());
+
+        $ruleset = $this->createMock(Ruleset::class);
+
+        $this->object->add($ruleset);
+        $this->assertFalse($this->object->isEmpty());
     }
 }

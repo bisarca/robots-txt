@@ -15,28 +15,15 @@ use PHPUnit_Framework_TestCase;
 
 /**
  * @covers Bisarca\RobotsTxt\Builder
+ * @group unit
  */
 class BuilderTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Builder
-     */
-    protected $object;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        $this->object = new Builder();
-    }
-
     /**
      * @param string $fixture
      * @param string $expected
      *
      * @dataProvider buildDataProvider
-     * @group functional
      */
     public function testBuild(string $fixture, string $expected)
     {
@@ -45,7 +32,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase
         $parser = new Parser();
         $rulesets = $parser->parse($content);
 
-        $built = $this->object->build($rulesets);
+        $built = Builder::build($rulesets);
 
         $this->assertStringEqualsFile($expected, $built);
     }
