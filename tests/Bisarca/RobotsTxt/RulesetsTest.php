@@ -55,6 +55,49 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
     /**
      * @depends testAdd
      */
+    public function testRemove()
+    {
+        $ruleset = $this->createMock(Ruleset::class);
+
+        $this->object->add($ruleset);
+        $this->assertCount(1, $this->object);
+
+        $removed = $this->object->remove($ruleset);
+
+        $this->assertCount(0, $this->object);
+        $this->assertTrue($removed);
+
+        $removed = $this->object->remove($ruleset);
+
+        $this->assertCount(0, $this->object);
+        $this->assertFalse($removed);
+
+        $this->object->add($this->createMock(Ruleset::class));
+
+        $removed = $this->object->remove($ruleset);
+
+        $this->assertCount(1, $this->object);
+        $this->assertFalse($removed);
+    }
+
+    /**
+     * @depends testAdd
+     * @depends testRemove
+     */
+    public function testHas()
+    {
+        $ruleset = $this->createMock(Ruleset::class);
+
+        $this->object->add($ruleset);
+        $this->assertTrue($this->object->has($ruleset));
+
+        $this->object->remove($ruleset);
+        $this->assertFalse($this->object->has($ruleset));
+    }
+
+    /**
+     * @depends testAdd
+     */
     public function testCount()
     {
         $this->assertCount(0, $this->object);
