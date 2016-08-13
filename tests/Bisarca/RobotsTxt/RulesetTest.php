@@ -11,20 +11,12 @@
 
 namespace Bisarca\RobotsTxt;
 
-use PHPUnit_Framework_TestCase;
-use Traversable;
-
 /**
  * @covers Bisarca\RobotsTxt\Ruleset
  * @group unit
  */
-class RulesetTest extends PHPUnit_Framework_TestCase
+class RulesetTest extends AbstractSetTest
 {
-    /**
-     * @var Ruleset
-     */
-    protected $object;
-
     /**
      * {@inheritdoc}
      */
@@ -33,17 +25,14 @@ class RulesetTest extends PHPUnit_Framework_TestCase
         $this->object = new Ruleset();
     }
 
-    public function testGetIterator()
+    protected function getElement()
     {
-        $this->assertInstanceOf(
-            Traversable::class,
-            $this->object->getIterator()
-        );
+        return $this->createMock(Directive\DirectiveInterface::class);
     }
 
     public function testAdd()
     {
-        $directive = $this->createMock(Directive\DirectiveInterface::class);
+        $directive = $this->getElement();
 
         $this->object->add($directive);
 
@@ -57,7 +46,7 @@ class RulesetTest extends PHPUnit_Framework_TestCase
      */
     public function testRemove()
     {
-        $directive = $this->createMock(Directive\DirectiveInterface::class);
+        $directive = $this->getElement();
 
         $this->object->add($directive);
         $this->assertCount(1, $this->object);
@@ -72,9 +61,7 @@ class RulesetTest extends PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->object);
         $this->assertFalse($removed);
 
-        $this->object->add(
-            $this->createMock(Directive\DirectiveInterface::class)
-        );
+        $this->object->add($this->getElement());
 
         $removed = $this->object->remove($directive);
 
@@ -88,55 +75,12 @@ class RulesetTest extends PHPUnit_Framework_TestCase
      */
     public function testHas()
     {
-        $directive = $this->createMock(Directive\DirectiveInterface::class);
+        $directive = $this->getElement();
 
         $this->object->add($directive);
         $this->assertTrue($this->object->has($directive));
 
         $this->object->remove($directive);
         $this->assertFalse($this->object->has($directive));
-    }
-
-    /**
-     * @depends testAdd
-     */
-    public function testCount()
-    {
-        $this->assertCount(0, $this->object);
-
-        $directive = $this->createMock(Directive\DirectiveInterface::class);
-
-        $this->object->add($directive);
-        $this->object->add($directive);
-
-        $this->assertSame(2, $this->object->count());
-        $this->assertCount(2, $this->object);
-    }
-
-    /**
-     * @depends testAdd
-     */
-    public function testClear()
-    {
-        $directive = $this->createMock(Directive\DirectiveInterface::class);
-
-        $this->object->add($directive);
-        $this->assertCount(1, $this->object);
-
-        $this->object->clear();
-        $this->assertCount(0, $this->object);
-    }
-
-    /**
-     * @depends testAdd
-     */
-    public function testIsEmpty()
-    {
-        $this->assertTrue($this->object->isEmpty());
-
-        $directive = $this->createMock(Directive\DirectiveInterface::class);
-
-        $this->object->add($directive);
-        $this->assertFalse($this->object->isEmpty());
     }
 }

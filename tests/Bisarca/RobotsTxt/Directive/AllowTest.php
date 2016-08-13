@@ -11,13 +11,13 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Bisarca\RobotsTxt\Directive\Allow
  * @group unit
  */
-class AllowTest extends PHPUnit_Framework_TestCase
+class AllowTest extends TestCase
 {
     public function testGetField()
     {

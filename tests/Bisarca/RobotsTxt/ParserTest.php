@@ -11,13 +11,13 @@
 
 namespace Bisarca\RobotsTxt;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Bisarca\RobotsTxt\Parser
  * @group unit
  */
-class ParserTest extends PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
     /**
      * @var Parser

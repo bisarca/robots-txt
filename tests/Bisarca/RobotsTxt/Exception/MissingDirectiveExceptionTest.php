@@ -11,13 +11,13 @@
 
 namespace Bisarca\RobotsTxt\Exception;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Bisarca\RobotsTxt\Exception\MissingDirectiveException
  * @group unit
  */
-class MissingDirectiveExceptionTest extends PHPUnit_Framework_TestCase
+class MissingDirectiveExceptionTest extends TestCase
 {
     public function testCreate()
     {

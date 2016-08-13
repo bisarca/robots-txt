@@ -11,20 +11,12 @@
 
 namespace Bisarca\RobotsTxt;
 
-use PHPUnit_Framework_TestCase;
-use Traversable;
-
 /**
  * @covers Bisarca\RobotsTxt\Rulesets
  * @group unit
  */
-class RulesetsTest extends PHPUnit_Framework_TestCase
+class RulesetsTest extends AbstractSetTest
 {
-    /**
-     * @var Rulesets
-     */
-    protected $object;
-
     /**
      * {@inheritdoc}
      */
@@ -33,17 +25,14 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
         $this->object = new Rulesets();
     }
 
-    public function testGetIterator()
+    protected function getElement()
     {
-        $this->assertInstanceOf(
-            Traversable::class,
-            $this->object->getIterator()
-        );
+        return $this->createMock(Ruleset::class);
     }
 
     public function testAdd()
     {
-        $ruleset = $this->createMock(Ruleset::class);
+        $ruleset = $this->getElement();
 
         $this->object->add($ruleset);
 
@@ -57,7 +46,7 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
      */
     public function testRemove()
     {
-        $ruleset = $this->createMock(Ruleset::class);
+        $ruleset = $this->getElement();
 
         $this->object->add($ruleset);
         $this->assertCount(1, $this->object);
@@ -72,7 +61,7 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->object);
         $this->assertFalse($removed);
 
-        $this->object->add($this->createMock(Ruleset::class));
+        $this->object->add($this->getElement());
 
         $removed = $this->object->remove($ruleset);
 
@@ -86,54 +75,12 @@ class RulesetsTest extends PHPUnit_Framework_TestCase
      */
     public function testHas()
     {
-        $ruleset = $this->createMock(Ruleset::class);
+        $ruleset = $this->getElement();
 
         $this->object->add($ruleset);
         $this->assertTrue($this->object->has($ruleset));
 
         $this->object->remove($ruleset);
         $this->assertFalse($this->object->has($ruleset));
-    }
-
-    /**
-     * @depends testAdd
-     */
-    public function testCount()
-    {
-        $this->assertCount(0, $this->object);
-
-        $ruleset = $this->createMock(Ruleset::class);
-
-        $this->object->add($ruleset);
-        $this->object->add($ruleset);
-
-        $this->assertCount(2, $this->object);
-    }
-
-    /**
-     * @depends testAdd
-     */
-    public function testClear()
-    {
-        $ruleset = $this->createMock(Ruleset::class);
-
-        $this->object->add($ruleset);
-        $this->assertCount(1, $this->object);
-
-        $this->object->clear();
-        $this->assertCount(0, $this->object);
-    }
-
-    /**
-     * @depends testAdd
-     */
-    public function testIsEmpty()
-    {
-        $this->assertTrue($this->object->isEmpty());
-
-        $ruleset = $this->createMock(Ruleset::class);
-
-        $this->object->add($ruleset);
-        $this->assertFalse($this->object->isEmpty());
     }
 }

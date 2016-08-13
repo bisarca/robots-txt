@@ -11,13 +11,13 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Bisarca\RobotsTxt\Directive\UserAgent
  * @group unit
  */
-class UserAgentTest extends PHPUnit_Framework_TestCase
+class UserAgentTest extends TestCase
 {
     public function testGetField()
     {

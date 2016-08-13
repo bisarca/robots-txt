@@ -11,13 +11,13 @@
 
 namespace Bisarca\RobotsTxt;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Bisarca\RobotsTxt\Builder
  * @group unit
  */
-class BuilderTest extends PHPUnit_Framework_TestCase
+class BuilderTest extends TestCase
 {
     /**
      * @param string $fixture
