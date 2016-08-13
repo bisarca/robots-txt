@@ -11,20 +11,10 @@
 
 namespace Bisarca\RobotsTxt;
 
-use ArrayIterator;
 use Bisarca\RobotsTxt\Directive\DirectiveInterface;
-use IteratorAggregate;
-use Traversable;
 
-class Ruleset implements IteratorAggregate
+class Ruleset extends AbstractSet
 {
-    /**
-     * Contained directives.
-     *
-     * @var DirectiveInterface[]
-     */
-    private $data = [];
-
     /**
      * Class constructor with optional initialization data.
      *
@@ -33,14 +23,6 @@ class Ruleset implements IteratorAggregate
     public function __construct(DirectiveInterface ...$directives)
     {
         $this->data = $directives;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator(): Traversable
-    {
-        return new ArrayIterator($this->data);
     }
 
     /**
@@ -66,24 +48,6 @@ class Ruleset implements IteratorAggregate
     }
 
     /**
-     * Remove all contained elements.
-     */
-    public function clear()
-    {
-        $this->data = [];
-    }
-
-    /**
-     * Checks if no elements are contained.
-     *
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return empty($this->data);
-    }
-
-    /**
      * Remove an element.
      *
      * @param DirectiveInterface $directive
@@ -105,10 +69,61 @@ class Ruleset implements IteratorAggregate
     }
 
     /**
-     * {@inheritdoc}
+     * ...
      */
-    public function count(): int
+    public function isUserAgentAllowed(
+        string $userAgent,
+        string $path = null,
+        \DateTime $lastVisit = null
+    ) {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getUserAgentRules(string $userAgent = '*')
     {
-        return count($this->data);
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getDelay()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getRequestRate()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function hasVisitTime()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getVisitTime()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getComments()
+    {
+        // ...
     }
 }

@@ -11,20 +11,8 @@
 
 namespace Bisarca\RobotsTxt;
 
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
-use Traversable;
-
-class Rulesets implements Countable, IteratorAggregate
+class Rulesets extends AbstractSet
 {
-    /**
-     * Contained rulesets.
-     *
-     * @var array
-     */
-    private $data = [];
-
     /**
      * Class constructor with optional initialization data.
      *
@@ -33,14 +21,6 @@ class Rulesets implements Countable, IteratorAggregate
     public function __construct(Ruleset ...$rulesets)
     {
         $this->data = $rulesets;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator(): Traversable
-    {
-        return new ArrayIterator($this->data);
     }
 
     /**
@@ -66,24 +46,6 @@ class Rulesets implements Countable, IteratorAggregate
     }
 
     /**
-     * Remove all contained elements.
-     */
-    public function clear()
-    {
-        $this->data = [];
-    }
-
-    /**
-     * Checks if no elements are contained.
-     *
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return empty($this->data);
-    }
-
-    /**
      * Remove an element.
      *
      * @param Ruleset $ruleset
@@ -105,10 +67,53 @@ class Rulesets implements Countable, IteratorAggregate
     }
 
     /**
-     * {@inheritdoc}
+     * ...
      */
-    public function count(): int
+    public function isUserAgentAllowed(
+        string $userAgent,
+        string $path = null,
+        \DateTime $lastVisit = null
+    ) {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getUserAgentRules(string $userAgent = '*')
     {
-        return count($this->data);
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getSitemaps()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function hasHost()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getHost()
+    {
+        // ...
+    }
+
+    /**
+     * ...
+     */
+    public function getCleanParams(string $path = null)
+    {
+        // ...
     }
 }
