@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Generator;
+
 class Rulesets extends AbstractSet
 {
     /**
@@ -86,11 +88,19 @@ class Rulesets extends AbstractSet
     }
 
     /**
-     * ...
+     * Extract sitemap directives.
+     *
+     * @return Generator
      */
-    public function getSitemaps()
+    public function getSitemaps(): Generator
     {
-        // ...
+        foreach ($this->data as $ruleset) {
+            foreach ($ruleset as $directive) {
+                if ($directive instanceof Directive\Sitemap) {
+                    yield $directive;
+                }
+            }
+        }
     }
 
     /**

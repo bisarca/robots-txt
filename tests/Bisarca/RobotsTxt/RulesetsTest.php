@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\Sitemap;
+
 /**
  * @covers Bisarca\RobotsTxt\Rulesets
  * @group unit
@@ -82,5 +84,21 @@ class RulesetsTest extends AbstractSetTest
 
         $this->object->remove($ruleset);
         $this->assertFalse($this->object->has($ruleset));
+    }
+
+    public function testGetSitemaps()
+    {
+        $directive1 = new Directive\Allow('Allow: /');
+        $directive2 = new Sitemap('Sitemap: http://example.com/sitemap.xml');
+        $ruleset = new Ruleset($directive1, $directive2);
+
+        $this->object->add($ruleset);
+
+        $sitemaps = $this->object->getSitemaps();
+        $data = iterator_to_array($sitemaps);
+
+        $this->assertContainsOnlyInstancesOf(Sitemap::class, $data);
+        $this->assertContainsOnly($directive2, $data);
+        $this->assertCount(1, $data);
     }
 }
