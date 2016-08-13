@@ -11,8 +11,6 @@
 
 namespace Bisarca\RobotsTxt;
 
-use Exception;
-
 class Parser
 {
     /**
@@ -43,8 +41,8 @@ class Parser
 
         foreach ($rows as $row) {
             try {
-                $directive = $this->getDirective($row);
-            } catch (\Exception $exception) {
+                $directive = $this->createDirective($row);
+            } catch (Exception\ExceptionInterface $exception) {
                 continue;
             }
 
@@ -83,7 +81,6 @@ class Parser
 
         // remove comments and wrapper spaces
         $rows = array_map(function ($row) {
-            // see http://www.conman.org/people/spc/robots2.html
             return trim(preg_replace('/^(.*)#.*/', '$1', $row));
         }, $rows);
 
@@ -98,7 +95,7 @@ class Parser
      *
      * @return DirectiveInterface
      */
-    private function getDirective(string $row): Directive\DirectiveInterface
+    private function createDirective(string $row): Directive\DirectiveInterface
     {
         $directives = array_filter(
             $this->directives,
@@ -112,7 +109,7 @@ class Parser
         // no directives found for this row
         // no action required
         if (empty($directives)) {
-            throw new Exception();
+            throw Exception\MissingDirectiveException::create($row);
         }
 
         // directives should be sorted by priority
