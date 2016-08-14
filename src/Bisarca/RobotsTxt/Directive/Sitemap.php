@@ -36,9 +36,7 @@ class Sitemap implements NonGroupInterface
 
         $url = trim($matches[1]);
 
-        $options = FILTER_FLAG_SCHEME_REQUIRED |
-            FILTER_FLAG_HOST_REQUIRED |
-            FILTER_FLAG_PATH_REQUIRED;
+        $options = FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED;
 
         if (!filter_var($url, FILTER_VALIDATE_URL, $options)) {
             throw InvalidDirectiveException::create($raw);
