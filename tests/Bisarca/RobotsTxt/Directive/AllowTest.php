@@ -11,6 +11,7 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,6 +25,10 @@ class AllowTest extends TestCase
      */
     public function testConstruct(string $row, string $expected)
     {
+        if ('' === $expected) {
+            $this->setExpectedException(InvalidDirectiveException::class);
+        }
+
         $directive = new Allow($row);
 
         $this->assertSame($expected, $directive->getValue());

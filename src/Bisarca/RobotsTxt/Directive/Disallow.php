@@ -30,7 +30,7 @@ class Disallow implements GroupMemberInterface
      */
     public function __construct(string $raw)
     {
-        if (!preg_match('/^disallow:([^#]*).*/i', $raw, $matches)) {
+        if (!preg_match('/^disallow:\s+([^# ]+).*/i', $raw, $matches)) {
             throw InvalidDirectiveException::create($raw);
         }
 

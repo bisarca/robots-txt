@@ -30,7 +30,7 @@ class Allow implements GroupMemberInterface
      */
     public function __construct(string $raw)
     {
-        if (!preg_match('/^allow:([^#]*).*/i', $raw, $matches)) {
+        if (!preg_match('/^allow:\s+([^# ]+).*/i', $raw, $matches)) {
             throw InvalidDirectiveException::create($raw);
         }
 

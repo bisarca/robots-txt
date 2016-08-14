@@ -30,7 +30,7 @@ class Sitemap implements NonGroupInterface
      */
     public function __construct(string $raw)
     {
-        if (!preg_match('/^sitemap:\s+([^ #]+).*/i', $raw, $matches)) {
+        if (!preg_match('/^sitemap:\s+([^# ]+).*/i', $raw, $matches)) {
             throw InvalidDirectiveException::create($raw);
         }
 
