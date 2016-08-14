@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+use Bisarca\RobotsTxt\Exception\ExceptionInterface;
+
 /**
  * Directives interface.
  */
@@ -19,7 +21,9 @@ interface DirectiveInterface
     /**
      * Constructor from raw row (e.g. "User-agent: *").
      *
-     * @param string $raw
+     * @param string $raw Robots.txt record.
+     *
+     * @throws ExceptionInterface If there's a problem in directive creation.
      */
     public function __construct(string $raw);
 
