@@ -11,6 +11,10 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\Allow;
+use Bisarca\RobotsTxt\Directive\Disallow;
+use Bisarca\RobotsTxt\Directive\UserAgent;
+
 /**
  * @covers Bisarca\RobotsTxt\Ruleset
  * @group unit
@@ -98,5 +102,108 @@ class RulesetTest extends AbstractSetTest
         $directives = $this->object->getDirectives('stdClass');
 
         $this->assertCount(0, $directives);
+    }
+
+    /**
+     * @dataProvider isUserAgentDataProvider
+     */
+    public function testIsUserAgentDisallowed(
+        string $path,
+        string $request,
+        bool $matches
+    ) {
+        $this->object->add(new UserAgent('user-agent: *'));
+        $this->object->add(new Disallow('disallow: '.$path));
+        $this->object->add(new Allow('allow: /'));
+
+        $this->assertSame(
+            $matches,
+            $this->object->isUserAgentAllowed('bot', $request)
+        );
+    }
+
+    /**
+     * @dataProvider isUserAgentDataProvider
+     * @depends testIsUserAgentDisallowed
+     */
+    public function testIsUserAgentAllowed(
+        string $path,
+        string $request,
+        bool $matches
+    ) {
+        $this->object->add(new UserAgent('user-agent: *'));
+        $this->object->add(new Allow('allow: '.$path));
+        $this->object->add(new Disallow('disallow: /'));
+
+        $this->assertSame(
+            !$matches,
+            $this->object->isUserAgentAllowed('bot', $request)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function isUserAgentDataProvider(): array
+    {
+        return [
+            ['/', '', false],
+            // Matches the root and any lower level URL
+            ['/', '/', false],
+            ['/', '/foo', false],
+            ['/', '/foo/', false],
+            ['/', '/foo/bar', false],
+            // Equivalent to "/" -- the trailing wildcard is ignored.
+            ['/*', '/', false],
+            ['/*', '/foo', false],
+            ['/*', '/foo/', false],
+            ['/*', '/foo/bar', false],
+            // Note the case-sensitive matching.
+            ['/fish', '/fish', false],
+            ['/fish', '/fish.html', false],
+            ['/fish', '/fish/salmon.html', false],
+            ['/fish', '/fishheads', false],
+            ['/fish', '/fishheads/yummy.html', false],
+            ['/fish', '/fish.php?id=anything', false],
+            ['/fish', '/Fish.asp', true],
+            ['/fish', '/catfish', true],
+            ['/fish', '/?id=fish', true],
+            // Equivalent to "/fish" -- the trailing wildcard is ignored.
+            ['/fish*', '/fish', false],
+            ['/fish*', '/fish.html', false],
+            ['/fish*', '/fish/salmon.html', false],
+            ['/fish*', '/fishheads', false],
+            ['/fish*', '/fishheads/yummy.html', false],
+            ['/fish*', '/fish.php?id=anything', false],
+            ['/fish*', '/Fish.asp', true],
+            ['/fish*', '/catfish', true],
+            ['/fish*', '/?id=fish', true],
+            // The trailing slash means this matches anything in this folder.
+            ['/fish/', '/fish/', false],
+            ['/fish/', '/fish/?id=anything', false],
+            ['/fish/', '/fish/salmon.htm', false],
+            ['/fish/', '/fish', true],
+            ['/fish/', '/fish.html', true],
+            ['/fish/', '/Fish/Salmon.asp', true],
+
+            ['/*.php', '/filename.php', false],
+            ['/*.php', '/folder/filename.php', false],
+            ['/*.php', '/folder/filename.php?parameters', false],
+            ['/*.php', '/folder/any.php.file.html', false],
+            ['/*.php', '/filename.php/', false],
+            ['/*.php', '/', true],
+            ['/*.php', '/windows.PHP', true],
+
+            ['/*.php$', '/filename.php', false],
+            ['/*.php$', '/folder/filename.php', false],
+            ['/*.php$', '/filename.php?parameters', true],
+            ['/*.php$', '/filename.php/', true],
+            ['/*.php$', '/filename.php5', true],
+            ['/*.php$', '/windows.PHP', true],
+
+            ['/fish*.php', '/fish.php', false],
+            ['/fish*.php', '/fishheads/catfish.php?parameters', false],
+            ['/fish*.php', '/Fish.PHP', true],
+        ];
     }
 }

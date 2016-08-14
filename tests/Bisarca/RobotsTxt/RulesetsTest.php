@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\Allow;
+use Bisarca\RobotsTxt\Directive\Disallow;
 use Bisarca\RobotsTxt\Directive\Sitemap;
 use Bisarca\RobotsTxt\Directive\UserAgent;
 use ReflectionClass;
@@ -90,7 +92,7 @@ class RulesetsTest extends AbstractSetTest
 
     public function testGetSitemaps()
     {
-        $directive1 = new Directive\Allow('Allow: /');
+        $directive1 = new Allow('Allow: /');
         $directive2 = new Sitemap('Sitemap: http://example.com/sitemap.xml');
         $ruleset = new Ruleset($directive1, $directive2);
 
@@ -130,6 +132,37 @@ class RulesetsTest extends AbstractSetTest
             $groups[$expected - 1],
             $reflectionMethod->invokeArgs($this->object, [$userAgent])
         );
+    }
+
+    /**
+     * @dataProvider getTopUserAgentDataProvider
+     */
+    public function testGetUserAgentRules(string $userAgent, int $expected)
+    {
+        $groups = [
+            [
+                new UserAgent('user-agent: googlebot-news'),
+                new Allow('allow: /'),
+            ],
+            [
+                new UserAgent('user-agent: *'),
+                new Disallow('disallow: /search'),
+            ],
+            [
+                new UserAgent('user-agent: googlebot'),
+                new Allow('allow: /index.html'),
+            ],
+        ];
+
+        foreach ($groups as $group) {
+            $this->object->add(new Ruleset(...$group));
+        }
+        $this->assertCount(3, $this->object);
+
+        $rules = $this->object->getUserAgentRules($userAgent);
+
+        $this->assertInstanceOf(Ruleset::class, $rules);
+        $this->assertEquals($groups[$expected - 1], iterator_to_array($rules));
     }
 
     /**

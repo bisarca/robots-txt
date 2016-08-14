@@ -12,8 +12,8 @@
 namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\DirectiveInterface;
-use Bisarca\RobotsTxt\Directive\UserAgent;
 use DateTime;
+use Generator;
 
 class Ruleset extends AbstractSet
 {
@@ -71,22 +71,41 @@ class Ruleset extends AbstractSet
     }
 
     /**
-     * ...
+     * Checks if a user agent is allowed.
+     *
+     * @param string        $userAgent
+     * @param string|null   $path
+     * @param DateTime|null $lastVisit
+     *
+     * @return bool
      */
     public function isUserAgentAllowed(
         string $userAgent,
-        string $path = null,
+        string $path = '',
         DateTime $lastVisit = null
-    ) {
-        // ...
-    }
+    ): bool {
+        $path = trim($path) ?: '/';
 
-    /**
-     * ...
-     */
-    public function getUserAgentRules(string $userAgent = UserAgent::ALL_AGENTS)
-    {
-        // ...
+        foreach ($this->data as $directive) {
+            if ($directive instanceof Directive\Allow) {
+                if (
+                    $directive->getValue() == $path ||
+                    preg_match('#'.$directive->getRegex().'#', $path)
+                ) {
+                    return true;
+                }
+            }
+            if ($directive instanceof Directive\Disallow) {
+                if (
+                    $directive->getValue() == $path ||
+                    preg_match('#'.$directive->getRegex().'#', $path)
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -122,11 +141,13 @@ class Ruleset extends AbstractSet
     }
 
     /**
-     * ...
+     * Gets ruleset comments for the developer.
+     *
+     * @return Generator
      */
-    public function getComments()
+    public function getComments(): Generator
     {
-        // ...
+        yield from $this->getDirectives(Directive\Comment::class);
     }
 
     /**

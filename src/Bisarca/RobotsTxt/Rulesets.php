@@ -71,22 +71,41 @@ class Rulesets extends AbstractSet
     }
 
     /**
-     * ...
+     * Checks if a user agent is allowed.
+     *
+     * @param string        $userAgent
+     * @param string|null   $path
+     * @param DateTime|null $lastVisit
+     *
+     * @return bool
      */
     public function isUserAgentAllowed(
         string $userAgent,
-        string $path = null,
+        string $path = '',
         DateTime $lastVisit = null
-    ) {
-        // ...
+    ): bool {
+        return $this
+            ->getUserAgentRules($userAgent)
+            ->isUserAgentAllowed($userAgent, $path, $lastVisit);
     }
 
     /**
-     * ...
+     * Gets roles for a specified user-agent.
+     *
+     * @param string $userAgent Default "*".
+     *
+     * @return Ruleset
      */
-    public function getUserAgentRules(string $userAgent = UserAgent::ALL_AGENTS)
+    public function getUserAgentRules(string $userAgent = UserAgent::ALL_AGENTS): Ruleset
     {
-        // ...
+        $topUserAgent = $this->getTopUserAgent($userAgent);
+
+        return array_values(array_filter(
+            $this->data,
+            function (Ruleset $ruleset) use ($topUserAgent) {
+                return $ruleset->has($topUserAgent);
+            }
+        ))[0];
     }
 
     /**
@@ -134,7 +153,7 @@ class Rulesets extends AbstractSet
      */
     private function getTopUserAgent(string $userAgent): UserAgent
     {
-        $userAgent = strtolower($userAgent);
+        $userAgent = mb_strtolower($userAgent);
         $top = null;
         $levenshtein = PHP_INT_MAX;
         $directives = [];
@@ -147,7 +166,7 @@ class Rulesets extends AbstractSet
         }
 
         foreach ($directives as $index => $directive) {
-            $localUa = strtolower($directive->getValue());
+            $localUa = mb_strtolower($directive->getValue());
 
             if (
                 UserAgent::ALL_AGENTS !== $localUa &&
