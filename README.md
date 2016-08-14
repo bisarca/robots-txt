@@ -28,7 +28,7 @@ Contribute
 Contributions to Bisarca are always welcome!
 
 * Report any bugs or issues you find on the [issue tracker](https://github.com/bisarca/robots-txt/issues).
-* You can grab the source code at Puli’s [Git repository](https://github.com/bisarca/robots-txt).
+* You can grab the source code at Bisarca's [Git repository](https://github.com/bisarca/robots-txt).
 
 Support
 -------
