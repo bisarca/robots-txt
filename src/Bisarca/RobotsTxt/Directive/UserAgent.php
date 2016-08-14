@@ -19,6 +19,13 @@ use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
 class UserAgent implements StartOfGroupInterface
 {
     /**
+     * When the asterisk is used, than all the user-agents are included.
+     *
+     * @var string
+     */
+    const ALL_AGENTS = '*';
+
+    /**
      * Directive value.
      *
      * @var string

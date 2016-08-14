@@ -12,6 +12,8 @@
 namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\DirectiveInterface;
+use Bisarca\RobotsTxt\Directive\UserAgent;
+use DateTime;
 
 class Ruleset extends AbstractSet
 {
@@ -74,7 +76,7 @@ class Ruleset extends AbstractSet
     public function isUserAgentAllowed(
         string $userAgent,
         string $path = null,
-        \DateTime $lastVisit = null
+        DateTime $lastVisit = null
     ) {
         // ...
     }
@@ -82,7 +84,7 @@ class Ruleset extends AbstractSet
     /**
      * ...
      */
-    public function getUserAgentRules(string $userAgent = '*')
+    public function getUserAgentRules(string $userAgent = UserAgent::ALL_AGENTS)
     {
         // ...
     }
