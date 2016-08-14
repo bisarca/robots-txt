@@ -97,11 +97,7 @@ class Rulesets extends AbstractSet
     public function getSitemaps(): Generator
     {
         foreach ($this->data as $ruleset) {
-            foreach ($ruleset as $directive) {
-                if ($directive instanceof Directive\Sitemap) {
-                    yield $directive;
-                }
-            }
+            yield from $ruleset->getDirectives(Directive\Sitemap::class);
         }
     }
 
@@ -127,5 +123,50 @@ class Rulesets extends AbstractSet
     public function getCleanParams(string $path = null)
     {
         // ...
+    }
+
+    /**
+     * Gets top User-Agent directive.
+     *
+     * @param string $userAgent
+     *
+     * @return UserAgent
+     */
+    private function getTopUserAgent(string $userAgent): UserAgent
+    {
+        $userAgent = strtolower($userAgent);
+        $top = null;
+        $levenshtein = PHP_INT_MAX;
+        $directives = [];
+
+        foreach ($this->data as $ruleset) {
+            $directives = array_merge(
+                $directives,
+                $ruleset->getDirectives(UserAgent::class)
+            );
+        }
+
+        foreach ($directives as $index => $directive) {
+            $localUa = strtolower($directive->getValue());
+
+            if (
+                UserAgent::ALL_AGENTS !== $localUa &&
+                false === stripos($userAgent, $localUa)
+            ) {
+                continue;
+            }
+
+            $lev = levenshtein($userAgent, $localUa);
+
+            if (0 === $lev) {
+                return $directive;
+            }
+
+            if ($lev < $levenshtein) {
+                $top = $directive;
+            }
+        }
+
+        return $top;
     }
 }

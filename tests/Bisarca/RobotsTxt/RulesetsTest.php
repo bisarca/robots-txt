@@ -12,6 +12,8 @@
 namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\Sitemap;
+use Bisarca\RobotsTxt\Directive\UserAgent;
+use ReflectionClass;
 
 /**
  * @covers Bisarca\RobotsTxt\Rulesets
@@ -100,5 +102,55 @@ class RulesetsTest extends AbstractSetTest
         $this->assertContainsOnlyInstancesOf(Sitemap::class, $data);
         $this->assertContainsOnly($directive2, $data);
         $this->assertCount(1, $data);
+    }
+
+    /**
+     * @link https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt#order-of-precedence-for-user-agents
+     *
+     * @dataProvider getTopUserAgentDataProvider
+     */
+    public function testGetTopUserAgent(string $userAgent, int $expected)
+    {
+        $reflectionClass = new ReflectionClass($this->object);
+        $reflectionMethod = $reflectionClass->getMethod('getTopUserAgent');
+        $reflectionMethod->setAccessible(true);
+
+        $groups = [
+            new UserAgent('user-agent: googlebot-news'),
+            new UserAgent('user-agent: *'),
+            new UserAgent('user-agent: googlebot'),
+        ];
+
+        foreach ($groups as $group) {
+            $this->object->add(new Ruleset($group));
+        }
+        $this->assertCount(3, $this->object);
+
+        $this->assertEquals(
+            $groups[$expected - 1],
+            $reflectionMethod->invokeArgs($this->object, [$userAgent])
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getTopUserAgentDataProvider(): array
+    {
+        return [
+            // Only the most specific group is followed, all others are ignored.
+            ['Googlebot-News', 1],
+            ['Googlebot', 3],
+            // There is no specific googlebot-images group,
+            // so the more generic group is followed.
+            ['Googlebot-Image', 3],
+            // These images are crawled for and by Googlebot News,
+            // therefore only the Googlebot News group is followed.
+            ['Googlebot-News', 1],
+            ['Otherbot', 2],
+            // Even if there is an entry for a related crawler,
+            // it is only valid if it is specifically matching.
+            ['Otherbot-News', 2],
+        ];
     }
 }

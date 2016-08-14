@@ -83,4 +83,20 @@ class RulesetTest extends AbstractSetTest
         $this->object->remove($directive);
         $this->assertFalse($this->object->has($directive));
     }
+
+    public function testGetDirectives()
+    {
+        $directive = $this->getElement();
+
+        $this->object->add($directive);
+
+        $directives = $this->object->getDirectives(get_class($directive));
+
+        $this->assertCount(1, $directives);
+        $this->assertContainsOnly($directive, $directives);
+
+        $directives = $this->object->getDirectives('stdClass');
+
+        $this->assertCount(0, $directives);
+    }
 }

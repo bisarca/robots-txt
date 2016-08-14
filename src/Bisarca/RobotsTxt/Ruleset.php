@@ -128,4 +128,18 @@ class Ruleset extends AbstractSet
     {
         // ...
     }
+
+    /**
+     * Gets directives of a certain type.
+     *
+     * @param string|null $class
+     *
+     * @return DirectiveInterface[]
+     */
+    public function getDirectives(string $class = null): array
+    {
+        return array_filter($this->data, function ($element) use ($class) {
+            return null === $class || $element instanceof $class;
+        });
+    }
 }
