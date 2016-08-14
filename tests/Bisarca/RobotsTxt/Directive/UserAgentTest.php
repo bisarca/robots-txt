@@ -11,6 +11,7 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,6 +20,38 @@ use PHPUnit\Framework\TestCase;
  */
 class UserAgentTest extends TestCase
 {
+    /**
+     * @dataProvider constructDataProvider
+     */
+    public function testConstruct(string $row, bool $valid, string $expected)
+    {
+        if (!$valid) {
+            $this->setExpectedException(InvalidDirectiveException::class);
+        }
+
+        $directive = new UserAgent($row);
+
+        $this->assertSame($expected, $directive->getValue());
+    }
+
+    /**
+     * @return array
+     */
+    public function constructDataProvider(): array
+    {
+        return [
+            ['User-Agent: A', true, 'A'],
+            ['User-Agent:  A', true, 'A'],
+            ['user-agent: A', true, 'A'],
+            ['User-Agent:  ', false, ''],
+            ['User-Agent: ', false, ''],
+            ['User-Agent:', false, ''],
+            ['user-agent:  ', false, ''],
+            ['user-agent: ', false, ''],
+            ['user-agent:', false, ''],
+        ];
+    }
+
     public function testGetField()
     {
         $this->assertSame('user-agent', UserAgent::getField());

@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
+
 /**
  * "User-agent" directive element.
  */
@@ -28,7 +30,11 @@ class UserAgent implements StartOfGroupInterface
      */
     public function __construct(string $raw)
     {
-        $this->value = preg_replace('/^user-agent:\s+(.+)/i', '$1', $raw);
+        if (!preg_match('/^user-agent:\s+([^ #]+).*/i', $raw, $matches)) {
+            throw InvalidDirectiveException::create($raw);
+        }
+
+        $this->value = $matches[1];
     }
 
     /**

@@ -19,6 +19,52 @@ use PHPUnit\Framework\TestCase;
  */
 class AllowTest extends TestCase
 {
+    /**
+     * @dataProvider constructDataProvider
+     */
+    public function testConstruct(string $row, string $expected)
+    {
+        $directive = new Allow($row);
+
+        $this->assertSame($expected, $directive->getValue());
+    }
+
+    /**
+     * @return array
+     */
+    public function constructDataProvider(): array
+    {
+        return [
+            ['Allow: /', '/'],
+            ['Allow:  /', '/'],
+            ['allow: /', '/'],
+            ['Allow:  ', ''],
+            ['Allow: ', ''],
+            ['Allow:', ''],
+            ['allow:  ', ''],
+            ['allow: ', ''],
+            ['allow:', ''],
+            ['Allow: / # comment', '/'],
+            ['Allow:  / # comment', '/'],
+            ['allow: / # comment', '/'],
+            ['Allow:  # comment', ''],
+            ['Allow: # comment', ''],
+            ['Allow: # comment', ''],
+            ['allow:  # comment', ''],
+            ['allow: # comment', ''],
+            ['allow:# comment', ''],
+            ['Allow: / #comment', '/'],
+            ['Allow:  / #comment', '/'],
+            ['allow: / #comment', '/'],
+            ['Allow:  #comment', ''],
+            ['Allow: #comment', ''],
+            ['Allow: #comment', ''],
+            ['allow:  #comment', ''],
+            ['allow: #comment', ''],
+            ['allow:#comment', ''],
+        ];
+    }
+
     public function testGetField()
     {
         $this->assertSame('allow', Allow::getField());

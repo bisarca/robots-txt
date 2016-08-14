@@ -11,6 +11,8 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
+
 /**
  * "Disallow" directive element.
  */
@@ -28,7 +30,11 @@ class Disallow implements GroupMemberInterface
      */
     public function __construct(string $raw)
     {
-        $this->value = preg_replace('/^disallow:\s+(.+)/i', '$1', $raw);
+        if (!preg_match('/^disallow:([^#]*).*/i', $raw, $matches)) {
+            throw InvalidDirectiveException::create($raw);
+        }
+
+        $this->value = trim($matches[1]);
     }
 
     /**

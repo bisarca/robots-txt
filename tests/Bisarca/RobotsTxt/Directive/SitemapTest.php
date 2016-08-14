@@ -11,6 +11,7 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,6 +20,56 @@ use PHPUnit\Framework\TestCase;
  */
 class SitemapTest extends TestCase
 {
+    /**
+     * @dataProvider constructDataProvider
+     */
+    public function testConstruct(string $row, bool $valid, string $expected)
+    {
+        if (!$valid) {
+            $this->setExpectedException(InvalidDirectiveException::class);
+        }
+
+        $directive = new Sitemap($row);
+
+        $this->assertSame($expected, $directive->getValue());
+    }
+
+    /**
+     * @return array
+     */
+    public function constructDataProvider(): array
+    {
+        $validUrl = 'http://example.com/sitemap.xml';
+        $invalidUrls = [
+            'http://example.com',
+            'example.com/sitemap.xml',
+            '/sitemap.xml',
+            '/',
+            ' ',
+            '',
+        ];
+
+        $data = [
+            ['Sitemap: '.$validUrl, true, $validUrl],
+            ['Sitemap: '.$validUrl.' # comment', true, $validUrl],
+            ['Sitemap: '.$validUrl.' #comment', true, $validUrl],
+            ['Sitemap: '.$validUrl.'#comment', true, $validUrl],
+        ];
+
+        foreach ($invalidUrls as $invalidUrl) {
+            $data[] = ['Sitemap: '.$invalidUrl, false, ''];
+            $data[] = ['sitemap: '.$invalidUrl, false, ''];
+            $data[] = [': '.$invalidUrl, false, ''];
+            $data[] = [$invalidUrl, false, ''];
+            $data[] = ['Sitemap: '.$invalidUrl.' # '.$validUrl, false, ''];
+            $data[] = ['Sitemap: '.$invalidUrl.' #'.$validUrl, false, ''];
+            $data[] = ['Sitemap: '.$invalidUrl.'# '.$validUrl, false, ''];
+            $data[] = ['Sitemap: '.$invalidUrl.'#'.$validUrl, false, ''];
+        }
+
+        return $data;
+    }
+
     public function testGetField()
     {
         $this->assertSame('sitemap', Sitemap::getField());
@@ -26,7 +77,7 @@ class SitemapTest extends TestCase
 
     public function testGetValue()
     {
-        $value = sha1(mt_rand());
+        $value = 'http://www.example.com/sitemap.xml';
         $directive = 'Sitemap: '.$value;
 
         $object = new Sitemap($directive);
@@ -39,7 +90,7 @@ class SitemapTest extends TestCase
      */
     public function testToString()
     {
-        $value = sha1(mt_rand());
+        $value = 'http://www.example.com/sitemap.xml';
         $directive = 'sitemap: '.$value;
 
         $object = new Sitemap($directive);

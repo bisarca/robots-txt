@@ -19,6 +19,52 @@ use PHPUnit\Framework\TestCase;
  */
 class DisallowTest extends TestCase
 {
+    /**
+     * @dataProvider constructDataProvider
+     */
+    public function testConstruct(string $row, string $expected)
+    {
+        $directive = new Disallow($row);
+
+        $this->assertSame($expected, $directive->getValue());
+    }
+
+    /**
+     * @return array
+     */
+    public function constructDataProvider(): array
+    {
+        return [
+            ['Disallow: /', '/'],
+            ['Disallow:  /', '/'],
+            ['disallow: /', '/'],
+            ['Disallow:  ', ''],
+            ['Disallow: ', ''],
+            ['Disallow:', ''],
+            ['disallow:  ', ''],
+            ['disallow: ', ''],
+            ['disallow:', ''],
+            ['Disallow: / # comment', '/'],
+            ['Disallow:  / # comment', '/'],
+            ['disallow: / # comment', '/'],
+            ['Disallow:  # comment', ''],
+            ['Disallow: # comment', ''],
+            ['Disallow: # comment', ''],
+            ['disallow:  # comment', ''],
+            ['disallow: # comment', ''],
+            ['disallow:# comment', ''],
+            ['Disallow: / #comment', '/'],
+            ['Disallow:  / #comment', '/'],
+            ['disallow: / #comment', '/'],
+            ['Disallow:  #comment', ''],
+            ['Disallow: #comment', ''],
+            ['Disallow: #comment', ''],
+            ['disallow:  #comment', ''],
+            ['disallow: #comment', ''],
+            ['disallow:#comment', ''],
+        ];
+    }
+
     public function testGetField()
     {
         $this->assertSame('disallow', Disallow::getField());
