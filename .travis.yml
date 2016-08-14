@@ -23,7 +23,7 @@ script:
   - vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml
 
 after_script:
-  - vendor/bin/coveralls -v
+  - travis_retry php vendor/bin/coveralls -v
 
 notifications:
   email: false
