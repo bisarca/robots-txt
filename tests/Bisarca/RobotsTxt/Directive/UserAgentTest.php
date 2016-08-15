@@ -79,4 +79,36 @@ class UserAgentTest extends TestCase
 
         $this->assertSame(ucfirst($directive), (string) $object);
     }
+
+    /**
+     * @dataProvider isMatchingDataProvider
+     */
+    public function testIsMatching(
+        string $directive,
+        string $userAgent,
+        bool $matching
+    ) {
+        $object = new UserAgent('user-agent: '.$directive);
+
+        $this->assertSame(
+            $matching,
+            $object->isMatching($userAgent)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function isMatchingDataProvider(): array
+    {
+        return [
+            ['*', 'bot', true],
+            ['bot', 'bot', true],
+            ['bot*', 'bot', true],
+            ['bot*', 'robot', false],
+            ['googlebot', 'googlebot/1.2', true],
+            ['not', 'bot', false],
+            ['notbot', 'bot', false],
+        ];
+    }
 }

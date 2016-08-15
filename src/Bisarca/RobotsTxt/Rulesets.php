@@ -159,30 +159,24 @@ class Rulesets extends AbstractSet
         $directives = [];
 
         foreach ($this->data as $ruleset) {
-            $directives = array_merge(
-                $directives,
-                $ruleset->getDirectives(UserAgent::class)
+            $directives = array_filter(
+                $ruleset->getDirectives(UserAgent::class),
+                function ($directive) use ($userAgent) {
+                    return $directive->isMatching($userAgent);
+                }
             );
-        }
 
-        foreach ($directives as $index => $directive) {
-            $localUa = mb_strtolower($directive->getValue());
+            foreach ($directives as $index => $directive) {
+                $localUa = mb_strtolower($directive->getValue());
+                $lev = levenshtein($userAgent, $localUa);
 
-            if (
-                UserAgent::ALL_AGENTS !== $localUa &&
-                false === stripos($userAgent, $localUa)
-            ) {
-                continue;
-            }
+                if (0 === $lev) {
+                    return $directive;
+                }
 
-            $lev = levenshtein($userAgent, $localUa);
-
-            if (0 === $lev) {
-                return $directive;
-            }
-
-            if ($lev < $levenshtein) {
-                $top = $directive;
+                if ($lev < $levenshtein) {
+                    $top = $directive;
+                }
             }
         }
 

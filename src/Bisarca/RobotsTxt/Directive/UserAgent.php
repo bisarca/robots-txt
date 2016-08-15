@@ -67,4 +67,19 @@ class UserAgent implements StartOfGroupInterface
     {
         return sprintf('User-agent: %s', $this->value);
     }
+
+    /**
+     * Checks if a user-agent is matching current user agent.
+     *
+     * @param string $userAgent
+     *
+     * @return bool
+     */
+    public function isMatching(string $userAgent): bool
+    {
+        // "*" matches any sequence of characters (zero or more)
+        $value = str_replace('*', '.*', $this->value);
+
+        return 1 === preg_match('#^'.$value.'#', trim($userAgent));
+    }
 }
