@@ -11,9 +11,11 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\Host;
 use Bisarca\RobotsTxt\Directive\UserAgent;
 use DateTime;
 use Generator;
+use TypeError;
 
 class Rulesets extends AbstractSet
 {
@@ -121,19 +123,33 @@ class Rulesets extends AbstractSet
     }
 
     /**
-     * ...
+     * Checks if the host directive is defined.
+     *
+     * @return bool
      */
-    public function hasHost()
+    public function hasHost(): bool
     {
-        // ...
+        try {
+            $this->getHost();
+
+            return true;
+        } catch (TypeError $error) {
+            return false;
+        }
     }
 
     /**
-     * ...
+     * Gets the host directive.
+     *
+     * @return Host
      */
-    public function getHost()
+    public function getHost(): Host
     {
-        // ...
+        foreach ($this->data as $ruleset) {
+            if ($directives = $ruleset->getDirectives(Host::class)) {
+                return $directives[0];
+            }
+        }
     }
 
     /**
@@ -176,6 +192,7 @@ class Rulesets extends AbstractSet
 
                 if ($lev < $levenshtein) {
                     $top = $directive;
+                    $levenshtein = $lev;
                 }
             }
         }

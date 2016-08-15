@@ -13,6 +13,7 @@ namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\Allow;
 use Bisarca\RobotsTxt\Directive\Disallow;
+use Bisarca\RobotsTxt\Directive\Host;
 use Bisarca\RobotsTxt\Directive\Sitemap;
 use Bisarca\RobotsTxt\Directive\UserAgent;
 use ReflectionClass;
@@ -185,5 +186,45 @@ class RulesetsTest extends AbstractSetTest
             // it is only valid if it is specifically matching.
             ['Otherbot-News', 2],
         ];
+    }
+
+    public function testGetHost()
+    {
+        $host = new Host('host: www.example.com');
+        $ruleset = new Ruleset($host);
+
+        $this->object->add($ruleset);
+        $this->assertSame($host, $this->object->getHost());
+
+        $ruleset2 = new Ruleset(new Host('host: example.com'));
+        $this->object->add($ruleset2);
+        $this->assertSame($host, $this->object->getHost());
+
+        $this->object->remove($ruleset);
+        $this->object->remove($ruleset2);
+
+        $this->setExpectedException('TypeError');
+        $this->object->getHost();
+    }
+
+    /**
+     * @depends testGetHost
+     */
+    public function testHasHost()
+    {
+        $host = new Host('host: www.example.com');
+        $ruleset = new Ruleset($host);
+
+        $this->object->add($ruleset);
+        $this->assertTrue($this->object->hasHost());
+
+        $ruleset2 = new Ruleset(new Host('host: example.com'));
+        $this->object->add($ruleset2);
+        $this->assertTrue($this->object->hasHost());
+
+        $this->object->remove($ruleset);
+        $this->object->remove($ruleset2);
+
+        $this->assertFalse($this->object->hasHost());
     }
 }
