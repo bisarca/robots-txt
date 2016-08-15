@@ -1,5 +1,5 @@
-The Bisarca robots.txt Component
-================================
+Robots.txt Component
+====================
 
 [![Build Status](https://travis-ci.org/bisarca/robots-txt.svg)](https://travis-ci.org/bisarca/robots-txt)
 [![Coverage Status](https://coveralls.io/repos/github/bisarca/robots-txt/badge.svg)](https://coveralls.io/github/bisarca/robots-txt)
@@ -21,14 +21,6 @@ $ composer require bisarca/robots-txt
 
 This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md) of the Composer documentation.
-
-Contribute
-----------
-
-Contributions to Bisarca are always welcome!
-
-* Report any bugs or issues you find on the [issue tracker](https://github.com/bisarca/robots-txt/issues).
-* You can grab the source code at Bisarca's [Git repository](https://github.com/bisarca/robots-txt).
 
 Support
 -------
