@@ -1,8 +1,8 @@
 Robots.txt Component
 ====================
 
-[![Build Status](https://travis-ci.org/bisarca/robots-txt.svg)](https://travis-ci.org/bisarca/robots-txt)
-[![Coverage Status](https://coveralls.io/repos/github/bisarca/robots-txt/badge.svg)](https://coveralls.io/github/bisarca/robots-txt)
+[![Build Status](https://img.shields.io/travis/bisarca/robots-txt.svg)](https://travis-ci.org/bisarca/robots-txt)
+[![Coverage Status](https://img.shields.io/coveralls/bisarca/robots-txt.svg)](https://coveralls.io/github/bisarca/robots-txt)
 
 The bisarca/robots-txt library is used to model and manage robots.txt files and
 directives.
