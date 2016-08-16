@@ -12,8 +12,9 @@
 namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\Host;
+use Bisarca\RobotsTxt\Directive\PathDirectiveInterface;
+use Bisarca\RobotsTxt\Directive\Sitemap;
 use Bisarca\RobotsTxt\Directive\UserAgent;
-use DateTime;
 use Generator;
 use TypeError;
 
@@ -75,20 +76,18 @@ class Rulesets extends AbstractSet
     /**
      * Checks if a user agent is allowed.
      *
-     * @param string        $userAgent
-     * @param string|null   $path
-     * @param DateTime|null $lastVisit
+     * @param string $userAgent
+     * @param string $path
      *
      * @return bool
      */
     public function isUserAgentAllowed(
         string $userAgent,
-        string $path = '',
-        DateTime $lastVisit = null
+        string $path = PathDirectiveInterface::DEFAULT_PATH
     ): bool {
         return $this
             ->getUserAgentRules($userAgent)
-            ->isUserAgentAllowed($userAgent, $path, $lastVisit);
+            ->isUserAgentAllowed($userAgent, $path);
     }
 
     /**
@@ -118,7 +117,7 @@ class Rulesets extends AbstractSet
     public function getSitemaps(): Generator
     {
         foreach ($this->data as $ruleset) {
-            yield from $ruleset->getDirectives(Directive\Sitemap::class);
+            yield from $ruleset->getDirectives(Sitemap::class);
         }
     }
 
@@ -150,14 +149,6 @@ class Rulesets extends AbstractSet
                 return $directives[0];
             }
         }
-    }
-
-    /**
-     * ...
-     */
-    public function getCleanParams(string $path = null)
-    {
-        // ...
     }
 
     /**

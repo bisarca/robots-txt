@@ -11,6 +11,12 @@
 
 namespace Bisarca\RobotsTxt;
 
+use Bisarca\RobotsTxt\Directive\DirectiveInterface;
+use Bisarca\RobotsTxt\Directive\NonGroupInterface;
+use Bisarca\RobotsTxt\Directive\StartOfGroupInterface;
+use Bisarca\RobotsTxt\Exception\ExceptionInterface;
+use Bisarca\RobotsTxt\Exception\MissingDirectiveException;
+
 class Parser
 {
     /**
@@ -18,9 +24,12 @@ class Parser
      *
      * @var string[]
      */
-    private $directives = [
+    const DIRECTIVES = [
         'allow' => Directive\Allow::class,
+        'comment' => Directive\Comment::class,
         'disallow' => Directive\Disallow::class,
+        'host' => Directive\Host::class,
+        'sitemap' => Directive\Sitemap::class,
         'user-agent' => Directive\UserAgent::class,
     ];
 
@@ -42,14 +51,20 @@ class Parser
         foreach ($rows as $row) {
             try {
                 $directive = $this->createDirective($row);
-            } catch (Exception\ExceptionInterface $exception) {
+            } catch (ExceptionInterface $exception) {
                 continue;
             }
 
             $previous = $type;
-            $type = $directive instanceof Directive\StartOfGroupInterface;
+            $type = $directive instanceof StartOfGroupInterface;
 
-            if ($type && !($type && $previous)) {
+            if (
+                $directive instanceof NonGroupInterface ||
+                (
+                    $type &&
+                    !($type && $previous)
+                )
+            ) {
                 ++$counter;
             }
 
@@ -93,12 +108,14 @@ class Parser
      *
      * @param string $raw Raw line.
      *
+     * @throws MissingDirectiveException If no directive is available.
+     *
      * @return DirectiveInterface
      */
-    private function createDirective(string $row): Directive\DirectiveInterface
+    private function createDirective(string $row): DirectiveInterface
     {
         $directives = array_filter(
-            $this->directives,
+            self::DIRECTIVES,
             function ($field) use ($row) {
                 return preg_match(sprintf('/^%s:\s+.+/i', $field), $row);
             },
@@ -109,7 +126,7 @@ class Parser
         // no directives found for this row
         // no action required
         if (empty($directives)) {
-            throw Exception\MissingDirectiveException::create($row);
+            throw MissingDirectiveException::create($row);
         }
 
         // directives should be sorted by priority

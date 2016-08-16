@@ -19,3 +19,8 @@ Disallow: *.jpg
 Disallow: /images*      # don't index here generally
 Disallow: /blackhole/info99*    # these we don't want indexed
 Disallow: /blackhole/info8.html # nor this one
+Sitemap: http://example.com/sitemap.xml # sitemap separator
+User-agent: alfred
+Disallow: *
+Host: example.com
+Sitemap: http://example.com/sitemap2.xml # 2nd sitemap

@@ -30,7 +30,7 @@ class Comment implements StartOfGroupInterface
      */
     public function __construct(string $raw)
     {
-        if (!preg_match('/^comment:\s+([^ #]+).*/i', $raw, $matches)) {
+        if (!preg_match('/^comment:\s*([^ #]+).*/i', $raw, $matches)) {
             throw InvalidDirectiveException::create($raw);
         }
 

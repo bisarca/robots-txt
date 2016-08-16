@@ -12,7 +12,7 @@
 namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\DirectiveInterface;
-use DateTime;
+use Bisarca\RobotsTxt\Directive\PathDirectiveInterface;
 use Generator;
 
 class Ruleset extends AbstractSet
@@ -73,71 +73,30 @@ class Ruleset extends AbstractSet
     /**
      * Checks if a user agent is allowed.
      *
-     * @param string        $userAgent
-     * @param string|null   $path
-     * @param DateTime|null $lastVisit
+     * @param string $userAgent
+     * @param string $path
      *
      * @return bool
      */
     public function isUserAgentAllowed(
         string $userAgent,
-        string $path = '',
-        DateTime $lastVisit = null
+        string $path = PathDirectiveInterface::DEFAULT_PATH
     ): bool {
-        $path = trim($path) ?: '/';
+        $path = trim($path) ?: PathDirectiveInterface::DEFAULT_PATH;
 
         foreach ($this->data as $directive) {
-            if ($directive instanceof Directive\Allow) {
-                if (
+            if (
+                $directive instanceof PathDirectiveInterface &&
+                (
                     $directive->getValue() == $path ||
                     preg_match('#'.$directive->getRegex().'#', $path)
-                ) {
-                    return true;
-                }
-            }
-            if ($directive instanceof Directive\Disallow) {
-                if (
-                    $directive->getValue() == $path ||
-                    preg_match('#'.$directive->getRegex().'#', $path)
-                ) {
-                    return false;
-                }
+                )
+            ) {
+                return $directive instanceof Directive\Allow;
             }
         }
 
         return true;
-    }
-
-    /**
-     * ...
-     */
-    public function getDelay()
-    {
-        // ...
-    }
-
-    /**
-     * ...
-     */
-    public function getRequestRate()
-    {
-        // ...
-    }
-
-    /**
-     * ...
-     */
-    public function hasVisitTime()
-    {
-        // ...
-    }
-
-    /**
-     * ...
-     */
-    public function getVisitTime()
-    {
-        // ...
     }
 
     /**

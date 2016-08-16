@@ -40,6 +40,7 @@ class DisallowTest extends TestCase
     public function constructDataProvider(): array
     {
         return [
+            ['Disallow:/', '/'],
             ['Disallow: /', '/'],
             ['Disallow:  /', '/'],
             ['disallow: /', '/'],
@@ -49,11 +50,11 @@ class DisallowTest extends TestCase
             ['disallow:  ', ''],
             ['disallow: ', ''],
             ['disallow:', ''],
+            ['Disallow:/ # comment', '/'],
             ['Disallow: / # comment', '/'],
             ['Disallow:  / # comment', '/'],
             ['disallow: / # comment', '/'],
             ['Disallow:  # comment', ''],
-            ['Disallow: # comment', ''],
             ['Disallow: # comment', ''],
             ['disallow:  # comment', ''],
             ['disallow: # comment', ''],
@@ -62,7 +63,6 @@ class DisallowTest extends TestCase
             ['Disallow:  / #comment', '/'],
             ['disallow: / #comment', '/'],
             ['Disallow:  #comment', ''],
-            ['Disallow: #comment', ''],
             ['Disallow: #comment', ''],
             ['disallow:  #comment', ''],
             ['disallow: #comment', ''],

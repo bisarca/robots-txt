@@ -188,6 +188,9 @@ class RulesetsTest extends AbstractSetTest
         ];
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetHost()
     {
         $host = new Host('host: www.example.com');
@@ -209,6 +212,7 @@ class RulesetsTest extends AbstractSetTest
 
     /**
      * @depends testGetHost
+     * @runInSeparateProcess
      */
     public function testHasHost()
     {
@@ -226,5 +230,55 @@ class RulesetsTest extends AbstractSetTest
         $this->object->remove($ruleset2);
 
         $this->assertFalse($this->object->hasHost());
+    }
+
+    /**
+     * @dataProvider isUserAgentDataProvider
+     */
+    public function testIsUserAgentAllowed(
+        string $path,
+        string $request,
+        bool $matches
+    ) {
+        $this->object->add(new Ruleset(
+            new UserAgent('user-agent: *'),
+            new Allow('allow: '.$path),
+            new Disallow('disallow: /')
+        ));
+
+        $this->assertSame(
+            !$matches,
+            $this->object->isUserAgentAllowed('bot', $request)
+        );
+    }
+
+    /**
+     * @dataProvider isUserAgentDataProvider
+     * @depends testIsUserAgentAllowed
+     */
+    public function testIsUserAgentDisallowed(
+        string $path,
+        string $request,
+        bool $matches
+    ) {
+        $this->object->add(new Ruleset(
+            new UserAgent('user-agent: *'),
+            new Disallow('disallow: '.$path),
+            new Allow('allow: /')
+        ));
+
+        $this->assertSame(
+            $matches,
+            $this->object->isUserAgentAllowed('bot', $request)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function isUserAgentDataProvider(): array
+    {
+        return (new RulesetTest())
+            ->isUserAgentDataProvider();
     }
 }

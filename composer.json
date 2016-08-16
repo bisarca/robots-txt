@@ -31,6 +31,6 @@
         ]
     },
     "suggest": {
-        "jeremykendall/php-domain-parser": ""
+        "jeremykendall/php-domain-parser": "for advanced validation of the Host directives"
     }
 }

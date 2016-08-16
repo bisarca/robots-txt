@@ -40,6 +40,7 @@ class AllowTest extends TestCase
     public function constructDataProvider(): array
     {
         return [
+            ['Allow:/', '/'],
             ['Allow: /', '/'],
             ['Allow:  /', '/'],
             ['allow: /', '/'],
@@ -49,11 +50,11 @@ class AllowTest extends TestCase
             ['allow:  ', ''],
             ['allow: ', ''],
             ['allow:', ''],
+            ['Allow:/ # comment', '/'],
             ['Allow: / # comment', '/'],
             ['Allow:  / # comment', '/'],
             ['allow: / # comment', '/'],
             ['Allow:  # comment', ''],
-            ['Allow: # comment', ''],
             ['Allow: # comment', ''],
             ['allow:  # comment', ''],
             ['allow: # comment', ''],
@@ -62,7 +63,6 @@ class AllowTest extends TestCase
             ['Allow:  / #comment', '/'],
             ['allow: / #comment', '/'],
             ['Allow:  #comment', ''],
-            ['Allow: #comment', ''],
             ['Allow: #comment', ''],
             ['allow:  #comment', ''],
             ['allow: #comment', ''],

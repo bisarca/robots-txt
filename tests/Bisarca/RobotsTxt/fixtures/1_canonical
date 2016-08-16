@@ -13,3 +13,12 @@ Disallow: *.jpg
 Disallow: /images*
 Disallow: /blackhole/info99*
 Disallow: /blackhole/info8.html
+
+Sitemap: http://example.com/sitemap.xml
+
+User-agent: alfred
+Disallow: *
+
+Host: example.com
+
+Sitemap: http://example.com/sitemap2.xml

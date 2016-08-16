@@ -39,7 +39,16 @@ class Host implements NonGroupInterface
      */
     public function __construct(string $raw)
     {
-        if (!preg_match('/^host:\s+([^# ]+).*/i', $raw, $matches)) {
+        if (
+            class_exists(Parser::class) &&
+            class_exists(PublicSuffixListManager::class) &&
+            null === self::$domainParser
+        ) {
+            $pslManager = new PublicSuffixListManager();
+            self::setDomainParser(new Parser($pslManager->getList()));
+        }
+
+        if (!preg_match('/^host:\s*([^# ]+).*/i', $raw, $matches)) {
             throw InvalidDirectiveException::create($raw);
         }
 
@@ -82,19 +91,20 @@ class Host implements NonGroupInterface
     private function validateHost(string $host, string $raw)
     {
         if (
-            class_exists(Parser::class) &&
-            class_exists(PublicSuffixListManager::class) &&
-            null === self::$domainParser
-        ) {
-            $pslManager = new PublicSuffixListManager();
-            self::$domainParser = new Parser($pslManager->getList());
-        }
-
-        if (
             null !== self::$domainParser &&
             !self::$domainParser->isSuffixValid($host)
         ) {
             throw InvalidDirectiveException::create($raw);
         }
+    }
+
+    /**
+     * Sets the domain parser.
+     *
+     * @param Parser $domainParser
+     */
+    public static function setDomainParser(Parser $domainParser)
+    {
+        self::$domainParser = $domainParser;
     }
 }

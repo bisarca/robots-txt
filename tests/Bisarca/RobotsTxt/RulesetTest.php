@@ -12,6 +12,7 @@
 namespace Bisarca\RobotsTxt;
 
 use Bisarca\RobotsTxt\Directive\Allow;
+use Bisarca\RobotsTxt\Directive\Comment;
 use Bisarca\RobotsTxt\Directive\Disallow;
 use Bisarca\RobotsTxt\Directive\UserAgent;
 
@@ -105,26 +106,33 @@ class RulesetTest extends AbstractSetTest
     }
 
     /**
-     * @dataProvider isUserAgentDataProvider
+     * @depends testGetDirectives
      */
-    public function testIsUserAgentDisallowed(
-        string $path,
-        string $request,
-        bool $matches
-    ) {
-        $this->object->add(new UserAgent('user-agent: *'));
-        $this->object->add(new Disallow('disallow: '.$path));
-        $this->object->add(new Allow('allow: /'));
+    public function testGetComments()
+    {
+        $directive1 = new Allow('Allow: /');
+        $directive2 = new Comment('Comment: lorem ipsum');
 
-        $this->assertSame(
-            $matches,
-            $this->object->isUserAgentAllowed('bot', $request)
-        );
+        $this->object->add($directive1);
+        $this->object->add($directive2);
+
+        $comments = $this->object->getComments();
+        $data = iterator_to_array($comments);
+
+        $this->assertContainsOnlyInstancesOf(Comment::class, $data);
+        $this->assertContainsOnly($directive2, $data);
+        $this->assertCount(1, $data);
+    }
+
+    public function testIsUserAgentAllowedWithoutRules()
+    {
+        $this->object->add(new UserAgent('user-agent: *'));
+
+        $this->assertTrue($this->object->isUserAgentAllowed('bot', '/'));
     }
 
     /**
      * @dataProvider isUserAgentDataProvider
-     * @depends testIsUserAgentDisallowed
      */
     public function testIsUserAgentAllowed(
         string $path,
@@ -137,6 +145,25 @@ class RulesetTest extends AbstractSetTest
 
         $this->assertSame(
             !$matches,
+            $this->object->isUserAgentAllowed('bot', $request)
+        );
+    }
+
+    /**
+     * @dataProvider isUserAgentDataProvider
+     * @depends testIsUserAgentAllowed
+     */
+    public function testIsUserAgentDisallowed(
+        string $path,
+        string $request,
+        bool $matches
+    ) {
+        $this->object->add(new UserAgent('user-agent: *'));
+        $this->object->add(new Disallow('disallow: '.$path));
+        $this->object->add(new Allow('allow: /'));
+
+        $this->assertSame(
+            $matches,
             $this->object->isUserAgentAllowed('bot', $request)
         );
     }

@@ -40,9 +40,12 @@ class CommentTest extends TestCase
     public function constructDataProvider(): array
     {
         return [
+            ['Comment:A', true, 'A'],
             ['Comment: A', true, 'A'],
             ['Comment:  A', true, 'A'],
             ['comment: A', true, 'A'],
+            ['Comment:A # comment', true, 'A'],
+            ['comment: A# comment', true, 'A'],
             ['Comment:  ', false, ''],
             ['Comment: ', false, ''],
             ['Comment:', false, ''],

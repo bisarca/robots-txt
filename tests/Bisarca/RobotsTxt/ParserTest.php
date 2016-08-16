@@ -37,6 +37,7 @@ class ParserTest extends TestCase
      * @param array  $totals
      *
      * @dataProvider parseDataProvider
+     * @runInSeparateProcess
      */
     public function testParse(string $content, array $totals)
     {
@@ -55,7 +56,7 @@ class ParserTest extends TestCase
     public function parseDataProvider(): array
     {
         return [
-            [file_get_contents(__DIR__.'/fixtures/1'), [15]],
+            [file_get_contents(__DIR__.'/fixtures/1'), [15, 1, 2, 1, 1]],
             [file_get_contents(__DIR__.'/fixtures/2'), [2, 2]],
         ];
     }

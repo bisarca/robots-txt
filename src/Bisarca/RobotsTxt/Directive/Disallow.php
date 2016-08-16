@@ -16,7 +16,7 @@ use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
 /**
  * "Disallow" directive element.
  */
-class Disallow implements GroupMemberInterface
+class Disallow implements GroupMemberInterface, PathDirectiveInterface
 {
     /**
      * Directive value.
@@ -30,7 +30,7 @@ class Disallow implements GroupMemberInterface
      */
     public function __construct(string $raw)
     {
-        if (!preg_match('/^disallow:\s+([^# ]+).*/i', $raw, $matches)) {
+        if (!preg_match('/^disallow:\s*([^# ]+).*/i', $raw, $matches)) {
             throw InvalidDirectiveException::create($raw);
         }
 
@@ -62,9 +62,7 @@ class Disallow implements GroupMemberInterface
     }
 
     /**
-     * Gets regular expression associated.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getRegex(): string
     {

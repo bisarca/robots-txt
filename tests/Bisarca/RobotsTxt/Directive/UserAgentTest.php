@@ -43,6 +43,8 @@ class UserAgentTest extends TestCase
             ['User-Agent: A', true, 'A'],
             ['User-Agent:  A', true, 'A'],
             ['user-agent: A', true, 'A'],
+            ['user-agent:A #comment', true, 'A'],
+            ['user-agent: A# comment', true, 'A'],
             ['User-Agent:  ', false, ''],
             ['User-Agent: ', false, ''],
             ['User-Agent:', false, ''],
