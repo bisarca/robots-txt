@@ -7,8 +7,6 @@ Robots.txt Component
 The bisarca/robots-txt library is used to model and manage robots.txt files and
 directives.
 
-It's based on [An Extended Standard for Robot Exclusion](http://www.conman.org/people/spc/robots2.html) and [Google Robots.txt Specifications](https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt).
-
 Installation
 ------------
 
