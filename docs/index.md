@@ -1,6 +1,3 @@
-Robots.txt Component
-====================
-
 The bisarca/robots-txt library is used to model and manage robots.txt files and
 directives.
 
