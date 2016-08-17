@@ -76,13 +76,11 @@ class Ruleset extends AbstractSet
     /**
      * Checks if a user agent is allowed.
      *
-     * @param string $userAgent
      * @param string $path
      *
      * @return bool
      */
     public function isUserAgentAllowed(
-        string $userAgent,
         string $path = PathDirectiveInterface::DEFAULT_PATH
     ): bool {
         $path = trim($path) ?: PathDirectiveInterface::DEFAULT_PATH;

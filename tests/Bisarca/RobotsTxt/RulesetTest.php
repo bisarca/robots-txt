@@ -145,7 +145,7 @@ class RulesetTest extends AbstractSetTest
 
         $this->assertSame(
             !$matches,
-            $this->object->isUserAgentAllowed('bot', $request)
+            $this->object->isUserAgentAllowed($request)
         );
     }
 
@@ -164,7 +164,7 @@ class RulesetTest extends AbstractSetTest
 
         $this->assertSame(
             $matches,
-            $this->object->isUserAgentAllowed('bot', $request)
+            $this->object->isUserAgentAllowed($request)
         );
     }
 

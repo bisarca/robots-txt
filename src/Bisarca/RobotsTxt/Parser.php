@@ -49,7 +49,7 @@ class Parser
         $groups = [];
 
         $counter = -1;
-        $type = null;
+        $type = false;
 
         foreach ($rows as $row) {
             try {
@@ -113,7 +113,7 @@ class Parser
     /**
      * Creates a directive from the raw line contained in the robots.txt file.
      *
-     * @param string $raw Raw line
+     * @param string $row Raw line
      *
      * @throws MissingDirectiveException If no directive is available
      *

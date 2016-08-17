@@ -95,7 +95,7 @@ class Rulesets extends AbstractSet
 
         return $this
             ->getUserAgentRules($userAgent)
-            ->isUserAgentAllowed($userAgent, $path);
+            ->isUserAgentAllowed($path);
     }
 
     /**
@@ -143,7 +143,7 @@ class Rulesets extends AbstractSet
     public function hasHost(): bool
     {
         foreach ($this->data as $ruleset) {
-            if ($directives = $ruleset->getDirectives(Host::class)) {
+            if ($ruleset->getDirectives(Host::class)) {
                 return true;
             }
         }
@@ -177,7 +177,6 @@ class Rulesets extends AbstractSet
         $userAgent = mb_strtolower($userAgent);
         $top = null;
         $levenshtein = PHP_INT_MAX;
-        $directives = [];
 
         foreach ($this->data as $ruleset) {
             $directives = array_filter(
