@@ -13,7 +13,7 @@ It's based on some documents available online:
 
 
 Usage
------
+=====
 
 The goal of this library is to allow an easier interaction with robots.txt rules
 while keeping everything.
@@ -56,6 +56,6 @@ file_put_contents('/path/to/your/public/robots.txt', $content);
 
 
 Internal Flow
--------------
+=============
 
 ![Library Flow](https://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgRmxvdwoKUGFyc2VyLT5SdWxlc2V0czogUGFyc2luZyBmcm9tIGEgZGlydHkgcm9ib3RzLnR4dAoAIggAKAxJbnRlcm5hbC9Vc2VyIGVsYWJvcmF0aW9uACMLQnVpbGRlcjogAAQFaW5nIGEgY2xlYW4AUQw&s=napkin)

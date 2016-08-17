@@ -14,59 +14,56 @@ rule set.
 
 
 Interfaces
-----------
+==========
 
 Internally there are some interfaces to use:
 
-```
-Bisarca\RobotsTxt\Directive\DirectiveInterface
-```
+DirectiveInterface
+------------------
 
 General directives interface.
 
 This interface must be implemented to allow the directive to be considered by
 the parser.
 
-```
-Bisarca\RobotsTxt\Directive\PathDirectiveInterface
-```
+PathDirectiveInterface
+----------------------
 
 Path based directives, currently only `Allow` and `Disallow`.
 
-```
-Bisarca\RobotsTxt\Directive\StartOfGroupInterface
-```
+StartOfGroupInterface
+---------------------
 
 Interface for directives starting a group.
 Generally these directives are also group members.
 
 Currently it's implemented only by the `UserAgent` directive.
 
-```
-Bisarca\RobotsTxt\Directive\GroupMemberInterface
-```
+GroupMemberInterface
+--------------------
 
 Directives to be grouped.
 
-```
-Bisarca\RobotsTxt\Directive\NonGroupInterface
-```
+NonGroupInterface
+-----------------
 
 Directives indipendent from a group, like `Sitemap` or `Host`.
 These are considered part of the robots.txt but not part of a single ruleset.
 
 
 Supported Directives
---------------------
+====================
 
 Currently supported directives are:
 
-**User-Agent**
+User-Agent
+----------
 
 This directive defines the robot the following rules applies to (e.g. Googlebot).
 
 
-**Allow**
+Allow
+-----
 
 This directive (if included) and the `Disallow` directive are to be processed in
 the order they appear in the rule set.
@@ -77,7 +74,8 @@ If a URL is not covered by any allow or disallow rules,
 then the URL is to be allowed.
 
 
-**Disallow**
+Disallow
+--------
 
 This directive and the Allow: directive (if included) are to be processed in the
 order they appear in the rule set.
@@ -101,7 +99,8 @@ if ($rulesets->isUserAgentAllowed('my-bot', '/path')) {
 ```
 
 
-**Sitemap**
+Sitemap
+-------
 
 This directive is independent from the User-Agent, so it doesn't matter
 where it is placed in the file.
@@ -122,7 +121,8 @@ foreach ($rulesets->getSitemaps() as $sitemap) {
 ```
 
 
-**Host**
+Host
+----
 
 The `Host` directive is used to define the main domain the bot should follow.
 This directive does not guarantee that the specified main domain will be selected.
@@ -139,7 +139,8 @@ if ($rulesets->hasHost()) {
 ```
 
 
-**Comment**
+Comment
+-------
 
 These are comments that the robot is encouraged to send back to the author/user
 of the robot. All `Comment`'s in a rule set are to be sent back (at least,
