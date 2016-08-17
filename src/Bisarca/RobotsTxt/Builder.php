@@ -11,21 +11,24 @@
 
 namespace Bisarca\RobotsTxt;
 
+/**
+ * Robots.txt file builder/serializer.
+ */
 class Builder
 {
     /**
      * Builds the robots.txt file content.
      *
-     * @param Rulesets $rulesets Required rulesets.
+     * @param Rulesets $rulesets Required rulesets
      *
      * @return string
      */
-    public static function build(Rulesets $rulesets): string
+    public function build(Rulesets $rulesets): string
     {
         $output = '';
 
         foreach ($rulesets as $ruleset) {
-            $output .= self::buildRuleset($ruleset).PHP_EOL;
+            $output .= $this->buildRuleset($ruleset).PHP_EOL;
         }
 
         return rtrim($output, PHP_EOL).PHP_EOL;
@@ -34,11 +37,11 @@ class Builder
     /**
      * Builds a single robots.txt' set of directives (ruleset).
      *
-     * @param Ruleset $ruleset Required ruleset.
+     * @param Ruleset $ruleset Required ruleset
      *
      * @return string
      */
-    private static function buildRuleset(Ruleset $ruleset): string
+    private function buildRuleset(Ruleset $ruleset): string
     {
         $output = '';
 

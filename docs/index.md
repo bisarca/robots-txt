@@ -22,6 +22,21 @@ It's based on a `Parser`, one or more set of directives (generally started by a
 User-Agent directive), and the collection of these sets, called `Rulesets` that
 represents the entire robots.txt.
 
+```php
+use Bisarca\RobotsTxt\Parser;
+
+$parser = new Parser();
+
+$content = file_get_contents('http://www.example.com/robots.txt');
+$rulesets = $parser->parse($content); // instanceof \Bisarca\RobotsTxt\Rulesets
+
+// is my-bot allowed to access to /path?
+$allowed = $rulesets->isUserAgentAllowed('my-bot', '/path');
+
+// is my-bot allowed to access (to /)?
+$allowed = $rulesets->isUserAgentAllowed('my-bot');
+```
+
 This `Rulesets` contains one or more (could contain also zero) `Ruleset`, that
 represents a set of [`Directive`](directives).
 
@@ -29,11 +44,14 @@ The `Ruleset` could be finally build into a clean version of the originally
 parsed robots.txt, using
 
 ```php
+use Bisarca\RobotsTxt\Builder;
+
 // $rulesets instanceof \Bisarca\RobotsTxt\Rulesets
 
-$robotsTxtContent = \Bisarca\RobotsTxt\Builder::build($rulesets);
+$builder = new Builder();
+$content = $builder->build($rulesets);
 
-file_put_contents('/path/to/your/public/robots.txt', $robotsTxtContent);
+file_put_contents('/path/to/your/public/robots.txt', $content);
 ```
 
 

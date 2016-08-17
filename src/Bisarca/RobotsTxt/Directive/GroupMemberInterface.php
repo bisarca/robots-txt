@@ -11,6 +11,9 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+/**
+ * Interface for directive those must be grouped.
+ */
 interface GroupMemberInterface extends DirectiveInterface
 {
 }

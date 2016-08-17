@@ -11,6 +11,9 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+/**
+ * Interface for directives starting a group.
+ */
 interface StartOfGroupInterface extends DirectiveInterface
 {
 }

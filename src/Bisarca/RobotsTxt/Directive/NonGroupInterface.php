@@ -11,6 +11,9 @@
 
 namespace Bisarca\RobotsTxt\Directive;
 
+/**
+ * Interface for group-indipendent directives.
+ */
 interface NonGroupInterface extends DirectiveInterface
 {
 }

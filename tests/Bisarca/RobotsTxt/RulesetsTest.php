@@ -140,6 +140,9 @@ class RulesetsTest extends AbstractSetTest
      */
     public function testGetUserAgentRules(string $userAgent, int $expected)
     {
+        // if the robots.txt is empty, than the bot can always access
+        $this->assertCount(0, $this->object->getUserAgentRules($userAgent));
+
         $groups = [
             [
                 new UserAgent('user-agent: googlebot-news'),
@@ -211,7 +214,6 @@ class RulesetsTest extends AbstractSetTest
     }
 
     /**
-     * @depends testGetHost
      * @runInSeparateProcess
      */
     public function testHasHost()
@@ -240,6 +242,10 @@ class RulesetsTest extends AbstractSetTest
         string $request,
         bool $matches
     ) {
+        // if the robots.txt is empty, than the bot can always access
+        $this->assertTrue($this->object->isUserAgentAllowed('bot', '/path'));
+        $this->assertTrue($this->object->isUserAgentAllowed('bot'));
+
         $this->object->add(new Ruleset(
             new UserAgent('user-agent: *'),
             new Allow('allow: '.$path),

@@ -1,3 +1,5 @@
+google_analytics: ['UA-82655257-2', 'robots-txt.readthedocs.io']
 repo_url: https://github.com/bisarca/robots-txt
 site_description: 'Bisarca robots.txt Management'
+site_favicon: https://avatars2.githubusercontent.com/u/20471322?v=3&s=16
 site_name: 'bisarca/robots-txt'

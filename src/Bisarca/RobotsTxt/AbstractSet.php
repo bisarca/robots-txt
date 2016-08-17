@@ -16,6 +16,9 @@ use Countable;
 use IteratorAggregate;
 use Traversable;
 
+/**
+ * Abstract set of utilities for internal sets.
+ */
 abstract class AbstractSet implements Countable, IteratorAggregate
 {
     /**

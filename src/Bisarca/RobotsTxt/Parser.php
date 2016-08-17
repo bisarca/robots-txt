@@ -17,6 +17,9 @@ use Bisarca\RobotsTxt\Directive\StartOfGroupInterface;
 use Bisarca\RobotsTxt\Exception\ExceptionInterface;
 use Bisarca\RobotsTxt\Exception\MissingDirectiveException;
 
+/**
+ * Robots.txt file parser.
+ */
 class Parser
 {
     /**
@@ -75,6 +78,10 @@ class Parser
             $groups[$counter][] = $directive;
         }
 
+        // any group-member records without a preceding
+        // start-of-group record are ignored
+        unset($groups[-1]);
+
         foreach ($groups as $index => $group) {
             $groups[$index] = new Ruleset(...$group);
         }
@@ -106,9 +113,9 @@ class Parser
     /**
      * Creates a directive from the raw line contained in the robots.txt file.
      *
-     * @param string $raw Raw line.
+     * @param string $raw Raw line
      *
-     * @throws MissingDirectiveException If no directive is available.
+     * @throws MissingDirectiveException If no directive is available
      *
      * @return DirectiveInterface
      */

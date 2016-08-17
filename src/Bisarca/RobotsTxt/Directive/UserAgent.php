@@ -16,7 +16,7 @@ use Bisarca\RobotsTxt\Exception\InvalidDirectiveException;
 /**
  * "User-agent" directive element.
  */
-class UserAgent implements StartOfGroupInterface
+class UserAgent implements StartOfGroupInterface, GroupMemberInterface
 {
     /**
      * When the asterisk is used, than all the user-agents are included.

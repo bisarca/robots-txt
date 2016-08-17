@@ -58,6 +58,7 @@ class ParserTest extends TestCase
         return [
             [file_get_contents(__DIR__.'/fixtures/1'), [15, 1, 2, 1, 1]],
             [file_get_contents(__DIR__.'/fixtures/2'), [2, 2]],
+            [file_get_contents(__DIR__.'/fixtures/3'), [2]],
         ];
     }
 }

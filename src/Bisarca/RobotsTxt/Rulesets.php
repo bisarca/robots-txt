@@ -16,8 +16,10 @@ use Bisarca\RobotsTxt\Directive\PathDirectiveInterface;
 use Bisarca\RobotsTxt\Directive\Sitemap;
 use Bisarca\RobotsTxt\Directive\UserAgent;
 use Generator;
-use TypeError;
 
+/**
+ * Set of groups of directives.
+ */
 class Rulesets extends AbstractSet
 {
     /**
@@ -85,6 +87,12 @@ class Rulesets extends AbstractSet
         string $userAgent,
         string $path = PathDirectiveInterface::DEFAULT_PATH
     ): bool {
+        // if the robots.txt is empty, than
+        // the bot can always access
+        if ($this->isEmpty()) {
+            return true;
+        }
+
         return $this
             ->getUserAgentRules($userAgent)
             ->isUserAgentAllowed($userAgent, $path);
@@ -93,12 +101,18 @@ class Rulesets extends AbstractSet
     /**
      * Gets roles for a specified user-agent.
      *
-     * @param string $userAgent Default "*".
+     * @param string $userAgent Default "*"
      *
      * @return Ruleset
      */
     public function getUserAgentRules(string $userAgent = UserAgent::ALL_AGENTS): Ruleset
     {
+        // if the robots.txt is empty, than
+        // no rules for that user-agent are defined
+        if ($this->isEmpty()) {
+            return new Ruleset();
+        }
+
         $topUserAgent = $this->getTopUserAgent($userAgent);
 
         return array_values(array_filter(
@@ -128,13 +142,13 @@ class Rulesets extends AbstractSet
      */
     public function hasHost(): bool
     {
-        try {
-            $this->getHost();
-
-            return true;
-        } catch (TypeError $error) {
-            return false;
+        foreach ($this->data as $ruleset) {
+            if ($directives = $ruleset->getDirectives(Host::class)) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**

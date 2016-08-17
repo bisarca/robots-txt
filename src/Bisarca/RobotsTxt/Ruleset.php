@@ -15,6 +15,9 @@ use Bisarca\RobotsTxt\Directive\DirectiveInterface;
 use Bisarca\RobotsTxt\Directive\PathDirectiveInterface;
 use Generator;
 
+/**
+ * Set of directives.
+ */
 class Ruleset extends AbstractSet
 {
     /**

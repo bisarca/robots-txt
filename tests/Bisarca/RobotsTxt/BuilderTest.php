@@ -20,6 +20,19 @@ use PHPUnit\Framework\TestCase;
 class BuilderTest extends TestCase
 {
     /**
+     * @var Builder
+     */
+    protected $object;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        $this->object = new Builder();
+    }
+
+    /**
      * @param string $fixture
      * @param string $expected
      *
@@ -32,7 +45,7 @@ class BuilderTest extends TestCase
         $parser = new Parser();
         $rulesets = $parser->parse($content);
 
-        $built = Builder::build($rulesets);
+        $built = $this->object->build($rulesets);
 
         $this->assertStringEqualsFile($expected, $built);
     }
