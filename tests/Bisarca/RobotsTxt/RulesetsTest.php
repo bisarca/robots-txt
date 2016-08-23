@@ -191,9 +191,6 @@ class RulesetsTest extends AbstractSetTest
         ];
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testGetHost()
     {
         $host = new Host('host: www.example.com');
@@ -213,9 +210,6 @@ class RulesetsTest extends AbstractSetTest
         $this->object->getHost();
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testHasHost()
     {
         $host = new Host('host: www.example.com');

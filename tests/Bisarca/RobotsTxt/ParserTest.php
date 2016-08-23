@@ -37,7 +37,6 @@ class ParserTest extends TestCase
      * @param array  $totals
      *
      * @dataProvider parseDataProvider
-     * @runInSeparateProcess
      */
     public function testParse(string $content, array $totals)
     {

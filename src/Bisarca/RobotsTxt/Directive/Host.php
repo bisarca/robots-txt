@@ -92,7 +92,7 @@ class Host implements NonGroupInterface
     {
         if (
             null !== self::$domainParser &&
-            !self::$domainParser->isSuffixValid($host)
+            false === self::$domainParser->isSuffixValid($host)
         ) {
             throw InvalidDirectiveException::create($raw);
         }

@@ -86,8 +86,6 @@ class HostTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
      */
     public function testSimpleConstruction()
     {

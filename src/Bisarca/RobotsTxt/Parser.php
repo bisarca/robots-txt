@@ -128,13 +128,14 @@ class Parser
             },
             ARRAY_FILTER_USE_KEY
         );
-        $directives = array_values($directives);
 
         // no directives found for this row
         // no action required
         if (empty($directives)) {
             throw MissingDirectiveException::create($row);
         }
+
+        $directives = array_values($directives);
 
         // directives should be sorted by priority
         return new $directives[0]($row);
