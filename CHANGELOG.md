@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `bisarca/robots-txt` will be documented in this file.
 
-## 1.0 - 2016-08-17
+## [Unreleased]
 
 ### Added
 - Nothing
@@ -10,7 +10,7 @@ All Notable changes to `bisarca/robots-txt` will be documented in this file.
 - Nothing
 
 ### Fixed
-- Nothing
+- Optimized test suite
 
 ### Remove
 - Nothing
