@@ -12,7 +12,7 @@
     "config": {
         "sort-packages": true
     },
-    "description": "Bisarca robots.txt Management",
+    "description": "Robots.txt Component",
     "license": "MIT",
     "name": "bisarca/robots-txt",
     "require": {
