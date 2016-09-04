@@ -14,7 +14,6 @@ matrix:
   fast_finish: true
 
 install:
-  - composer require --no-update satooshi/php-coveralls:^1.0
   - composer require --no-update roave/security-advisories:dev-master
   - composer install -n --no-progress
 
@@ -24,8 +23,9 @@ before_script:
 script:
   - SYMFONY_DEPRECATIONS_HELPER=strict vendor/bin/phpunit -v
 
-after_script:
-  - vendor/bin/coveralls -v --exclude-no-stmt
+after_success:
+  - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+  - php coveralls.phar -v --exclude-no-stmt
 
 notifications:
   email: false
